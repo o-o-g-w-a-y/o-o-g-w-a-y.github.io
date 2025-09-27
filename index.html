@@ -1,0 +1,2206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSET | Cybersecurity Module</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --neon-blue: #00f2ff;
+      --neon-purple: #a100ff;
+      --neon-pink: #ff00e6;
+      --neon-green: #00ff88;
+      --dark-bg: #0a0e1a;
+      --darker-bg: #050811;
+      --glow-intensity: 0 0 15px;
+      --terminal-cursor: #00ff41;
+    }
+    
+    #cyber-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--darker-bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .loading-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+      letter-spacing: 5px;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .loading-text::after {
+      content: '_';
+      position: absolute;
+      right: -20px;
+      animation: blink 1s step-end infinite;
+      color: var(--terminal-cursor);
+    }
+    
+    .loading-bar-container {
+      width: 400px;
+      height: 8px;
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .loading-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+      transition: width 0.1s ease-out;
+    }
+    
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      animation: scan 1.5s infinite;
+    }
+    
+    .main-content {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+      flex-direction: column;
+      padding-top: calc(100vh - 80px);
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #ffffff;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar-custom {
+      background: rgba(10, 14, 26, 0.95) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+      padding: 0.8rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 2.4rem !important;
+      font-weight: 900 !important;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: var(--glow-intensity) rgba(161, 0, 255, 0.7);
+      letter-spacing: 3px;
+      position: relative;
+      padding-right: 20px;
+      margin-right: 1rem;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    .navbar-brand:hover {
+      text-shadow: 0 0 25px var(--neon-purple), 
+                   0 0 20px var(--neon-blue),
+                   0 0 35px rgba(161, 0, 255, 0.5);
+      transform: scale(1.05) !important;
+    }
+
+    .navbar-brand::after {
+      content: '_';
+      position: absolute;
+      right: 0;
+      animation: blink 1s step-end infinite;
+      color: var(--terminal-cursor);
+      font-weight: 400;
+    }
+
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700 !important;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: white !important;
+      margin: 0 12px;
+      position: relative;
+      padding: 8px 0 !important;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      transition: width 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--neon-blue) !important;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+    }
+
+    .nav-link:hover::before {
+      width: 100%;
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .nav-link.active {
+      color: var(--neon-green) !important;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+    }
+
+    .nav-link.active::before {
+      width: 100%;
+      background: var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    .navbar-toggler {
+      border: 1px solid var(--neon-blue);
+      padding: 0.5rem;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0, 242, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    .hero-section {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      background: rgba(5, 8, 17, 0.4);
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      box-shadow: 0 0 40px rgba(0, 242, 255, 0.1),
+                  inset 0 0 20px rgba(0, 242, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 4rem 5rem;
+      max-width: 800px;
+      text-align: center;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .hero-section h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 900;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+    }
+
+    .hero-section p {
+      font-size: 1.5rem;
+      margin-bottom: 2.5rem;
+      font-family: 'Fira Code', monospace;
+      color: #b2f5ea;
+      line-height: 1.6;
+    }
+
+    .btn-cyber {
+      padding: 0.9rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.4),
+                  inset 0 0 10px rgba(0, 242, 255, 0.2);
+    }
+
+    .btn-cyber:hover {
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.6),
+                  inset 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .matrix-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    #cyber-guide {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 100;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s ease-out;
+    }
+
+    #cyber-guide.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .guide-character {
+      width: 120px;
+      height: 160px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .guide-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #0a2e38, #051a22);
+      border: 2px solid var(--neon-blue);
+      border-radius: 60% 60% 20% 20%;
+      box-shadow: 
+        0 0 25px rgba(0, 242, 255, 0.3),
+        inset 0 0 15px rgba(0, 242, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .guide-face {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+    }
+
+    .guide-eyes {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .guide-eye {
+      width: 20px;
+      height: 30px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      box-shadow: 
+        0 0 10px var(--neon-green),
+        0 0 20px var(--neon-green);
+      animation: eye-blink 4s infinite;
+    }
+
+    .guide-mouth {
+      width: 40px;
+      height: 10px;
+      margin: 0 auto;
+      background: var(--neon-pink);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 0 8px var(--neon-pink);
+      transition: all 0.3s;
+    }
+
+    .guide-character:hover .guide-mouth {
+      height: 15px;
+      border-radius: 10px;
+    }
+
+    .guide-panel {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 20px;
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid var(--neon-blue);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .guide-panel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 242, 255, 0.3), 
+        transparent);
+      animation: panel-scan 3s linear infinite;
+    }
+
+    .speech-bubble {
+      position: absolute;
+      bottom: 180px;
+      right: 0;
+      width: 250px;
+      padding: 15px;
+      background: rgba(5, 8, 17, 0.9);
+      border: 1px solid var(--neon-blue);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: #b2f5ea;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      pointer-events: none;
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: 30px;
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: var(--neon-blue) transparent transparent;
+      filter: drop-shadow(0 5px 5px rgba(0, 242, 255, 0.3));
+    }
+
+    .speech-bubble.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .guide-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .guide-btn {
+      background: rgba(0, 242, 255, 0.2);
+      border: 1px solid var(--neon-blue);
+      color: var(--neon-blue);
+      padding: 5px 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-left: 5px;
+    }
+
+    .guide-btn:hover {
+      background: rgba(0, 242, 255, 0.4);
+      box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+    }
+
+    .faq-container {
+      position: fixed;
+      bottom: 220px;
+      right: 30px;
+      width: 250px;
+      background: rgba(5, 8, 17, 0.9);
+      border: 1px solid var(--neon-blue);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+      padding: 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #b2f5ea;
+      z-index: 101;
+      display: none;
+    }
+    
+    .faq-container.active {
+      display: block;
+    }
+    
+    .faq-item {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(0, 242, 255, 0.3);
+      cursor: pointer;
+    }
+    
+    .faq-item:hover {
+      color: var(--neon-green);
+    }
+    
+    .input-container {
+      position: fixed;
+      bottom: 180px;
+      right: 30px;
+      width: 250px;
+      display: none;
+      z-index: 102;
+    }
+    
+    .input-container.active {
+      display: block;
+    }
+    
+    #user-input {
+      width: 100%;
+      background: rgba(5, 8, 17, 0.9);
+      border: 1px solid var(--neon-blue);
+      border-radius: 5px;
+      padding: 8px;
+      font-family: 'Fira Code', monospace;
+      color: white;
+      outline: none;
+    }
+    
+    #user-input::placeholder {
+      color: rgba(178, 245, 234, 0.5);
+    }
+
+    .cyber-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 8, 17, 0.95);
+      z-index: 2000;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .cyber-popup-content {
+      background: var(--darker-bg);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 50px rgba(0, 242, 255, 0.4),
+                  inset 0 0 20px rgba(0, 242, 255, 0.1);
+      width: 420px;
+      padding: 2.5rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .cyber-popup-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(0, 242, 255, 0.1),
+        transparent
+      );
+      transform: rotate(45deg);
+      animation: panel-scan 6s linear infinite;
+      pointer-events: none;
+    }
+
+    .cyber-popup h2 {
+      color: var(--neon-green);
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px var(--neon-green);
+      position: relative;
+    }
+
+    .cyber-popup input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 1.2rem;
+      background: rgba(0, 242, 255, 0.08);
+      border: 1px solid var(--neon-blue);
+      color: white;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cyber-popup input:focus {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 15px var(--neon-green);
+      background: rgba(0, 255, 136, 0.1);
+      outline: none;
+    }
+
+    .cyber-popup input::placeholder {
+      color: rgba(178, 245, 234, 0.6);
+    }
+
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: var(--neon-pink);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .close-btn:hover {
+      transform: rotate(90deg);
+      text-shadow: 0 0 15px var(--neon-pink);
+      background: rgba(255, 0, 230, 0.1);
+    }
+
+    .user-display {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+      position: relative;
+      padding: 8px 15px;
+      border-radius: 30px;
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .user-display:hover {
+      background: rgba(0, 242, 255, 0.2);
+      box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+    }
+
+    .username-display {
+      color: var(--neon-green);
+      font-family: 'Fira Code', monospace;
+      margin-right: 15px;
+      text-shadow: 0 0 8px var(--neon-green);
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      position: relative;
+      padding-right: 15px;
+    }
+
+    .username-display::after {
+      content: '|';
+      position: absolute;
+      right: 0;
+      color: var(--neon-blue);
+      animation: blink 1s step-end infinite;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: none;
+      color: var(--neon-pink);
+      padding: 5px 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-logout:hover {
+      color: white;
+      background: rgba(255, 0, 230, 0.2);
+      box-shadow: 0 0 15px var(--neon-pink);
+    }
+
+    .btn-logout::before {
+      content: '⌫';
+      margin-right: 5px;
+      font-size: 1.1rem;
+    }
+
+    .cyber-alert {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3000;
+      background: var(--darker-bg);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 40px rgba(0, 242, 255, 0.4),
+                  inset 0 0 20px rgba(0, 242, 255, 0.1);
+      width: 350px;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+      backdrop-filter: blur(5px);
+    }
+
+    .cyber-alert.active {
+      display: block;
+      animation: alertFadeIn 0.4s ease-out;
+    }
+
+    @keyframes alertFadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .cyber-alert h3 {
+      color: var(--neon-green);
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .cyber-alert p {
+      color: #b2f5ea;
+      font-family: 'Fira Code', monospace;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .cyber-alert-btn {
+      background: transparent;
+      border: 1px solid var(--neon-blue);
+      color: var(--neon-blue);
+      padding: 0.7rem 1.8rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 4px;
+      margin: 0 10px;
+    }
+
+    .cyber-alert-btn:hover {
+      background: rgba(0, 242, 255, 0.1);
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .cyber-alert-btn.confirm {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+
+    .cyber-alert-btn.confirm:hover {
+      background: rgba(0, 255, 136, 0.1);
+      box-shadow: 0 0 15px var(--neon-green);
+    }
+
+    .cyber-alert-btn.danger {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+
+    .cyber-alert-btn.danger:hover {
+      background: rgba(255, 0, 230, 0.1);
+      box-shadow: 0 0 15px var(--neon-pink);
+    }
+
+    .alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 8, 17, 0.8);
+      z-index: 2999;
+      display: none;
+    }
+
+    .alert-overlay.active {
+      display: block;
+    }
+
+    #login-btn {
+      background: rgba(0, 242, 255, 0.15);
+      border: 1px solid var(--neon-blue);
+      border-radius: 4px;
+      padding: 8px 20px !important;
+      margin-left: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #login-btn:hover {
+      background: rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 20px var(--neon-blue);
+      transform: translateY(-2px);
+    }
+
+    #login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 242, 255, 0.4),
+        transparent
+      );
+      transition: all 0.5s;
+    }
+
+    #login-btn:hover::before {
+      left: 100%;
+    }
+
+    #login-btn::before {
+      display: none !important;
+    }
+
+ .user-display {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  position: relative;
+  padding: 8px 15px;
+  border-radius: 30px;
+  background: rgba(0, 242, 255, 0.1);
+  border: 1px solid var(--neon-blue);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.user-display:hover {
+  background: rgba(0, 242, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+}
+
+    .nav-item.locked .nav-link {
+      color: rgba(255, 255, 255, 0.3) !important;
+      cursor: not-allowed;
+      /* Prevent dragging locked links */
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      /* Disable text selection */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      /* Disable context menu */
+      pointer-events: none;
+    }
+
+    .nav-item.locked .nav-link:hover::before {
+      width: 0;
+    }
+
+    /* Tutorial focus highlight */
+    .nav-item.tutorial-highlight > .nav-link,
+    .tutorial-highlight > .nav-link {
+      color: var(--neon-green) !important;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.9);
+    }
+    .nav-item.tutorial-highlight > .nav-link::before,
+    .tutorial-highlight > .nav-link::before {
+      width: 100%;
+      background: var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    
+    @keyframes scan {
+      0% { right: 100%; }
+      100% { right: -20px; }
+    }
+    
+    @keyframes matrix-fall {
+      from { transform: translateY(-100vh); }
+      to { transform: translateY(100vh); }
+    }
+
+    @keyframes eye-blink {
+      0%, 45%, 55%, 100% { height: 30px; }
+      50% { height: 5px; }
+    }
+
+    @keyframes panel-scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @media (max-width: 992px) {
+      .hero-section {
+        padding: 3rem;
+        width: 90%;
+      }
+      
+      .hero-section h1 {
+        font-size: 2.8rem;
+      }
+      
+      .navbar-brand {
+        font-size: 2rem !important;
+      }
+      
+      .loading-text {
+        font-size: 2.8rem;
+      }
+      
+      .loading-bar-container {
+        width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem;
+      }
+      
+      .hero-section h1 {
+        font-size: 2.2rem;
+      }
+      
+      .hero-section p {
+        font-size: 1.2rem;
+      }
+      
+      .btn-cyber {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .loading-text {
+        font-size: 2rem;
+        letter-spacing: 3px;
+      }
+      
+      .loading-bar-container {
+        width: 250px;
+        height: 6px;
+      }
+
+      #cyber-guide {
+        transform: scale(0.8) translateY(100px);
+        right: 15px;
+        bottom: 15px;
+      }
+      
+      .speech-bubble {
+        width: 200px;
+        font-size: 0.8rem;
+      }
+    }
+  /* ===== FOOTER ===== */
+    .cyber-footer {
+      background: rgba(5, 8, 17, 0.95);
+      border-top: 1px solid rgba(0, 242, 255, 0.3);
+      padding: 60px 0 30px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .cyber-footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .footer-logo {
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 2.4rem !important;
+      font-weight: 900 !important;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: var(--glow-intensity) rgba(161, 0, 255, 0.7);
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .footer-about p {
+      color: #b2f5ea;
+      font-family: 'Rajdhani', sans-serif;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .footer-links h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .footer-links ul { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: 10px; }
+
+    .footer-links a {
+      color: #b2f5ea;
+      font-family: 'Rajdhani', sans-serif;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      padding-left: 15px;
+    }
+
+    .footer-links a::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      color: var(--neon-blue);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--neon-blue);
+      padding-left: 20px;
+      text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+    }
+
+    .footer-links a:hover::before { opacity: 1; left: 0; }
+
+    .footer-social h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .social-icons { display: flex; gap: 15px; }
+
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3); }
+
+    .social-icon.discord { background: rgba(88, 101, 242, 0.1); border-color: rgba(88, 101, 242, 0.3); }
+    .social-icon.discord:hover { background: #5865F2; box-shadow: 0 10px 20px rgba(88, 101, 242, 0.4); }
+
+    .social-icon.facebook { background: rgba(24, 119, 242, 0.1); border-color: rgba(24, 119, 242, 0.3); }
+    .social-icon.facebook:hover { background: #1877F2; box-shadow: 0 10px 20px rgba(24, 119, 242, 0.4); }
+
+    .copyright {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 242, 255, 0.2);
+      text-align: center;
+      color: #b2f5ea;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .copyright a { color: white !important; text-decoration: none; transition: all 0.3s ease; }
+    .copyright a:hover { color: #ccc !important; }
+
+    /* Prevent dragging on all protected links */
+.protected-link {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  /* Disable text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* For locked footer links when logged out */
+.footer-links a.protected-link:not([href*="about.html"]):not([href*="index.html"]) {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+  </style>
+</head>
+<body>
+
+  <div id="cyber-loading">
+    <div class="loading-text">LOADING</div>
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loadingBar"></div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">DSET</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+            <li class="nav-item locked" id="course-nav-item" ><a class="nav-link" href="course.html">Course</a></li>
+            <li class="nav-item locked" id="quiz-nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
+            <li class="nav-item locked" id="resources-nav-item"><a class="nav-link" href="resources.html">Resources</a></li>
+            <li class="nav-item" id="login-nav-item">
+              <a class="nav-link" href="#" id="login-btn">Login</a>
+            </li>
+            <li class="nav-item" id="user-nav-item" style="display:none;">
+              <div class="user-display">
+                <span class="username-display" id="username-nav-display"></span>
+                <button id="logout-btn" class="btn-logout">LOGOUT</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="hero-section">
+      <h1>HACK THE FUTURE WITH DSET</h1>
+      <p id="typewriter"></p>
+      <a href="#" class="btn btn-cyber" id="join-btn">JOIN THE CYBER REVOLUTION</a>
+    </div>
+
+    <div class="matrix-container" id="matrixContainer"></div>
+    <!-- Footer -->
+     <footer class="cyber-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-5 mb-lg-0">
+          <div class="footer-about">
+            <div class="footer-logo">DSET</div>
+            <p>DSET is a premier cyber security training platform dedicated to equipping individuals with the skills needed to defend against digital threats in our interconnected world.</p>
+            <p>> SECURE • EDUCATE • INNOVATE</p>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-5 mb-md-0">
+          <div class="footer-links">
+            <h3>LINKS</h3>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="course.html" id="footer-course-link" class="protected-link">Courses</a></li>
+              <li><a href="quiz.html" id="footer-quiz-link" class="protected-link">Quiz</a></li>
+              <li><a href="resources.html" id="footer-resources-link" class="protected-link">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-5 mb-md-0">
+          <div class="footer-links">
+            <h3>COURSES</h3>
+            <ul>
+              <li><a href="Modules/module1.html" id="footer-fundamentals-link" class="protected-link">Fundamentals</a></li>
+              <li><a href="Modules/module2.html" id="footer-attack-link" class="protected-link">Cyber Attack</a></li>
+              <li><a href="Modules/module3.html" id="footer-defense-link" class="protected-link">Cyber Defense</a></li>
+              <li><a href="Modules/module4.html" id="footer-action-link" class="protected-link">In Action</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="footer-social">
+            <h3>CONNECT WITH US</h3>
+            <div class="social-icons">
+              <a href="https://discord.gg/example" class="social-icon discord" target="_blank">
+                <i class="fab fa-discord"></i>
+              </a>
+              <a href="https://facebook.com/example" class="social-icon facebook" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+            <p class="mt-4">Join our community of cyber security professionals and enthusiasts.</p>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 DSET CYBER SECURITY TRAINING. ALL RIGHTS RESERVED. | <a href="#">PRIVACY POLICY</a> | <a href="#">TERMS OF SERVICE</a> | Made by <a href="https://www.facebook.com/ishan.das.770995">Ishan Das</a> and <a href="https://www.facebook.com/overpower.gaming.94">Sidratul Rahman Safwan</a></p>
+      </div>
+    </div>
+  </footer>
+  </div>
+
+  <div id="cyber-guide">
+    <div class="guide-character">
+      <div class="guide-body">
+        <div class="guide-face">
+          <div class="guide-eyes">
+            <div class="guide-eye left"></div>
+            <div class="guide-eye right"></div>
+          </div>
+          <div class="guide-mouth"></div>
+        </div>
+        <div class="guide-panel"></div>
+      </div>
+    </div>
+    <div class="speech-bubble">
+      <div id="guide-message">> Welcome to DSET Cyber Module.</div>
+      <div class="guide-controls">
+        <button class="guide-btn" id="next-btn">Next</button>
+        <button class="guide-btn" id="faq-btn">FAQ</button>
+        <button class="guide-btn" id="chat-btn">Chat</button>
+      </div>
+    </div>
+    
+    <div class="faq-container" id="faq-container">
+      <div class="faq-item" data-question="How do I get my certificate?">How do I get my certificate?</div>
+      <div class="faq-item" data-question="What's the quiz structure?">What's the quiz structure?</div>
+      <div class="faq-item" data-question="Where are the courses?">Where are the courses?</div>
+      <div class="faq-item" data-question="How many attempts do I get?">How many attempts do I get?</div>
+    </div>
+    
+    <div class="input-container" id="input-container">
+      <input type="text" id="user-input" placeholder="Type 'help' for tutorial...">
+    </div>
+  </div>
+
+  <div id="login-popup" class="cyber-popup">
+  <div class="cyber-popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>ACCESS TERMINAL</h2>
+    <form id="login-form">
+      <input type="text" id="login-id" placeholder="ID (e.g., STU101)" required>
+      <input type="text" id="login-mobile" placeholder="Mobile (e.g., 01712345678)" required>
+      <button type="submit" class="btn-cyber">AUTHENTICATE</button>
+    </form>
+  </div>
+</div>
+
+  <div class="alert-overlay" id="alert-overlay"></div>
+  <div class="cyber-alert" id="cyber-alert">
+    <h3 id="alert-title">ALERT</h3>
+    <p id="alert-message">Message goes here</p>
+    <div id="alert-buttons">
+      <button class="cyber-alert-btn confirm" id="alert-confirm">Confirm</button>
+      <button class="cyber-alert-btn danger" id="alert-cancel">Cancel</button>
+    </div>
+  </div>
+<script>
+// ===== SECURITY: COMPREHENSIVE ACCESS CONTROL =====
+// Global variables
+let userDatabase = [];
+const appState = {
+  currentUser: null,
+  isFirstVisit: !localStorage.getItem('dsetUser'),
+  hasCompletedTutorial: !!localStorage.getItem('dsetUser'),
+  currentMessageIndex: 0,
+  currentFocus: null
+};
+
+// DOM elements
+const elements = {
+  guide: document.getElementById('cyber-guide'),
+  message: document.getElementById('guide-message'),
+  nextButton: document.getElementById('next-btn'),
+  faqButton: document.getElementById('faq-btn'),
+  loginForm: document.getElementById("login-form"),
+  loginId: document.getElementById("login-id"),
+  loginMobile: document.getElementById("login-mobile"),
+  chatButton: document.getElementById('chat-btn'),
+  speechBubble: document.querySelector('.speech-bubble'),
+  faqContainer: document.getElementById('faq-container'),
+  inputContainer: document.getElementById('input-container'),
+  userInput: document.getElementById('user-input'),
+  faqItems: document.querySelectorAll('.faq-item'),
+  loginBtn: document.getElementById("login-btn"),
+  logoutBtn: document.getElementById("logout-btn"),
+  loginPopup: document.getElementById("login-popup"),
+  closeBtn: document.querySelector(".close-btn"),
+  userNavItem: document.getElementById("user-nav-item"),
+  usernameDisplay: document.getElementById("username-nav-display"),
+  loginNavItem: document.getElementById("login-nav-item"),
+  typewriter: document.getElementById("typewriter"),
+  loadingScreen: document.getElementById('cyber-loading'),
+  loadingBar: document.getElementById('loadingBar'),
+  mainContent: document.querySelector('.main-content'),
+  matrixContainer: document.getElementById("matrixContainer"),
+  alertOverlay: document.getElementById("alert-overlay"),
+  cyberAlert: document.getElementById("cyber-alert"),
+  alertTitle: document.getElementById("alert-title"),
+  alertMessage: document.getElementById("alert-message"),
+  alertConfirm: document.getElementById("alert-confirm"),
+  alertCancel: document.getElementById("alert-cancel"),
+  courseNavItem: document.getElementById("course-nav-item"),
+  quizNavItem: document.getElementById("quiz-nav-item"),
+  resourcesNavItem: document.getElementById("resources-nav-item"),
+  joinBtn: document.getElementById("join-btn"),
+  // Footer elements
+  footerCourseLink: document.getElementById("footer-course-link"),
+  footerQuizLink: document.getElementById("footer-quiz-link"),
+  footerResourcesLink: document.getElementById("footer-resources-link"),
+  footerFundamentalsLink: document.getElementById("footer-fundamentals-link"),
+  footerAttackLink: document.getElementById("footer-attack-link"),
+  footerDefenseLink: document.getElementById("footer-defense-link"),
+  footerActionLink: document.getElementById("footer-action-link")
+};
+
+// Guide messages
+const guideMessages = {
+  welcome: [
+    {text: "> Welcome to DSET Cyber Module.", focus: null},
+    {text: "> I'm your interactive guide.", focus: null},
+    {text: "> Let me walk you through our platform...", focus: null}
+  ],
+  tutorial: [
+    {text: "> We offer 4 comprehensive cybersecurity courses:", focus: null},
+    {text: "> 1. Cybersecurity", focus: null},
+    {text: "> 2. Networking", focus: null}, 
+    {text: "> 3. Cyber Attacks", focus: null},
+    {text: "> 4. Cyber Defense", focus: null},
+    {text: "> Let me show you where to find them...", focus: null},
+    {text: "> Here's the Course section!", focus: "course-nav-item"},
+    {text: "> Click this button to access all courses", focus: null},
+    {text: "> After completing ALL courses, you'll unlock:", focus: null},
+    {text: "> - 5 topic quizzes (one per subject)", focus: null},
+    {text: "> - 1 final comprehensive exam", focus: null},
+    {text: "> Here's how to access quizzes when ready...", focus: null},
+    {text: "> Here's the Quiz section!", focus: "quiz-nav-item"},
+    {text: "> Available after completing all courses", focus: null},
+    {text: "> Pass the final exam with 60%+ to earn your certificate!", focus: null},
+    {text: "> Need help later? Type 'help' or click me anytime!", focus: null}
+  ],
+  general: [
+    "> How can I assist you today?",
+    "> Need help with a specific course?",
+    "> Remember: Complete all courses before quizzes!",
+    "> Certificate requires 60% on the final exam.",
+    "> Type 'help' to repeat the tutorial."
+  ],
+  faq: {
+    "How do I get my certificate?": "> Complete all 4 courses → Take 5 topic quizzes → Pass final quiz (60%+) → Download certificate!",
+    "What's the quiz structure?": "> 5 topic quizzes (after all courses) → 1 final quiz → Certificate on passing (60%+)",
+    "Where are the courses?": "> Click 'Course' in navbar → Select any course → Study all before quizzing!",
+    "How many attempts do I get?": "> Unlimited attempts! But certificate requires passing final quiz in one go."
+  }
+};
+
+// List of all protected pages
+const protectedPages = ['course.html', 'quiz.html', 'resources.html'];
+
+/**
+ * Shows an alert modal with custom title, message and buttons
+ */
+function showAlert(title, message, options = {}) {
+  elements.alertTitle.textContent = title;
+  elements.alertMessage.textContent = message;
+  
+  if (options.confirm) {
+    elements.alertConfirm.style.display = 'inline-block';
+    elements.alertConfirm.textContent = options.confirmText || 'Confirm';
+    elements.alertConfirm.onclick = () => {
+      hideAlert();
+      if (options.onConfirm) options.onConfirm();
+    };
+  } else {
+    elements.alertConfirm.style.display = 'none';
+  }
+  
+  if (options.cancel) {
+    elements.alertCancel.style.display = 'inline-block';
+    elements.alertCancel.textContent = options.cancelText || 'Cancel';
+    elements.alertCancel.onclick = () => {
+      hideAlert();
+      if (options.onCancel) options.onCancel();
+    };
+  } else {
+    elements.alertCancel.style.display = 'none';
+  }
+  
+  elements.alertOverlay.classList.add('active');
+  elements.cyberAlert.classList.add('active');
+}
+
+/**
+ * Hides the alert modal
+ */
+function hideAlert() {
+  elements.alertOverlay.classList.remove('active');
+  elements.cyberAlert.classList.remove('active');
+}
+
+/**
+ * Checks for logged in user in localStorage
+ */
+function checkLoggedInUser() {
+  const savedUser = localStorage.getItem('loggedInUser');
+  if (savedUser) {
+    try {
+      const user = JSON.parse(savedUser);
+      loginUser(user, true); // Pass `true` for auto-login
+    } catch (e) {
+      localStorage.removeItem('loggedInUser');
+    }
+  }
+}
+
+/**
+ * Logs in a user and updates UI
+ */
+function loginUser(user, isAutoLogin = false) {
+  appState.currentUser = user;
+  
+  // Always save to localStorage (persistent)
+  localStorage.setItem('loggedInUser', JSON.stringify(user));
+  
+  // Also save to sessionStorage (current session)
+  sessionStorage.setItem('currentUser', JSON.stringify(user));
+  
+  // Update UI
+  elements.userNavItem.style.display = "block";
+  elements.loginNavItem.style.display = "none";
+  elements.usernameDisplay.textContent = user.Name;
+  elements.loginPopup.style.display = "none";
+  
+  // Unlock navigation
+  document.querySelectorAll('.locked').forEach(el => {
+    el.classList.remove('locked');
+  });
+  
+  // Enable protected links
+  document.querySelectorAll('.protected-link').forEach(link => {
+    link.style.pointerEvents = 'auto';
+    link.style.userSelect = 'auto';
+    link.style.webkitUserDrag = 'auto';
+    link.style.opacity = '1';
+  });
+
+  // Enable protected footer links
+document.querySelectorAll('.footer-links a.protected-link').forEach(link => {
+  link.style.pointerEvents = 'auto';
+  link.style.opacity = '1';
+  link.style.cursor = 'pointer';
+});
+
+  // Show welcome message ONLY if:
+  // - Manual login (not auto-login)
+  // - OR returning after browser close (no sessionStorage flag)
+  if (!isAutoLogin || !sessionStorage.getItem('hasShownWelcome')) {
+    setTimeout(() => {
+      showAlert("ACCESS GRANTED", `Welcome back, ${user.Name}!`, { confirm: true });
+    }, 800); // 0.8s delay for smoother animation
+  }
+
+  // Set a flag to prevent welcome message on refreshes
+  sessionStorage.setItem('hasShownWelcome', 'true');
+}
+
+/**
+ * Logs out the current user
+ */
+function logoutUser() {
+  showAlert(
+    "CONFIRM LOGOUT",
+    "Are you sure you want to log out?",
+    {
+      confirm: true,
+      confirmText: "LOGOUT",
+      onConfirm: () => {
+        // Clear both storage types
+        localStorage.removeItem('loggedInUser');
+        sessionStorage.removeItem('currentUser');
+        
+        // Reset UI
+        elements.userNavItem.style.display = "none";
+        elements.loginNavItem.style.display = "block";
+        
+        // Immediately lock navigation items
+        [elements.courseNavItem, elements.quizNavItem, elements.resourcesNavItem].forEach(el => {
+          el.classList.add('locked');
+        });
+        
+        // Disable protected links
+        document.querySelectorAll('.protected-link').forEach(link => {
+          link.style.pointerEvents = 'none';
+          link.style.userSelect = 'none';
+          link.style.webkitUserDrag = 'none';
+          link.style.opacity = '0.5';
+        });
+
+        // Disable protected footer links
+document.querySelectorAll('.footer-links a.protected-link').forEach(link => {
+  link.style.pointerEvents = 'none';
+  link.style.opacity = '0.5';
+  link.style.cursor = 'not-allowed';
+});
+        
+        showAlert("LOGGED OUT", "You have been logged out.", { confirm: true });
+      },
+      cancel: true
+    }
+  );
+}
+
+/**
+ * Validates user credentials against the database
+ */
+function validateUser(id, mobile) {
+  try {
+    const normalizedMobile = normalizeMobile(mobile);
+    const user = userDatabase.find(u => 
+      u.ID === id.trim() && 
+      normalizeMobile(u.Mobile) === normalizedMobile
+    );
+    
+    if (!user) throw new Error('No matching user found');
+    return user;
+  } catch (error) {
+    console.error('Validation error:', error);
+    return null;
+  }
+}
+
+/**
+ * Displays a message in the guide bubble
+ */
+function showMessage(messageObj) {
+  // Always clear previous focus before showing a new message
+  clearFocus();
+  if (typeof messageObj === 'string') {
+    elements.message.innerHTML = sanitizeHTML(messageObj.replace(/\n/g, '<br>'));
+  } else {
+    elements.message.innerHTML = sanitizeHTML(messageObj.text.replace(/\n/g, '<br>'));
+    if (messageObj.focus) setFocus(messageObj.focus);
+  }
+  elements.speechBubble.classList.add('active');
+}
+
+/**
+ * Shows the next message in a sequence
+ */
+function showNextMessage(messages, index) {
+  if (index < messages.length) {
+    showMessage(messages[index]);
+    appState.currentMessageIndex = index;
+    elements.nextButton.style.display = index === messages.length - 1 ? 'none' : 'block';
+  }
+}
+
+/**
+ * Starts the tutorial sequence
+ */
+function startTutorial() {
+  appState.currentMessageIndex = 0;
+  const allMessages = [...guideMessages.welcome, ...guideMessages.tutorial];
+  showNextMessage(allMessages, 0);
+  
+  elements.nextButton.onclick = () => {
+    showNextMessage(allMessages, appState.currentMessageIndex + 1);
+    if (appState.currentMessageIndex === allMessages.length - 1) {
+      appState.hasCompletedTutorial = true;
+      localStorage.setItem('dsetUser', 'true');
+      clearFocus();
+    }
+  };
+}
+
+/**
+ * Starts normal guide mode with random messages
+ */
+function startNormalMode() {
+  const randomMessage = guideMessages.general[
+    Math.floor(Math.random() * guideMessages.general.length)
+  ];
+  showMessage(randomMessage);
+  elements.nextButton.style.display = 'none';
+  
+  document.querySelector('.guide-character').onclick = () => {
+    const randomMsg = guideMessages.general[
+      Math.floor(Math.random() * guideMessages.general.length)
+    ];
+    showMessage(randomMsg);
+  };
+}
+
+/**
+ * Clears any focused element highlights
+ */
+function clearFocus() {
+  if (appState.currentFocus) {
+    const prev = document.getElementById(appState.currentFocus);
+    if (prev) prev.classList.remove('tutorial-highlight');
+  }
+  appState.currentFocus = null;
+}
+
+/**
+ * Highlights a specific element
+ */
+function setFocus(target) {
+  clearFocus();
+  if (target) {
+    const element = document.getElementById(target);
+    if (element) {
+      element.classList.add('tutorial-highlight');
+      appState.currentFocus = target;
+    }
+  }
+}
+
+/**
+ * Toggles FAQ container visibility
+ */
+function handleFAQButton() {
+  elements.faqContainer.classList.toggle('active');
+  elements.inputContainer.classList.remove('active');
+  clearFocus();
+}
+
+/**
+ * Toggles chat input visibility
+ */
+function handleChatButton() {
+  elements.inputContainer.classList.toggle('active');
+  elements.faqContainer.classList.remove('active');
+  clearFocus();
+  if (elements.inputContainer.classList.contains('active')) {
+    elements.userInput.focus();
+  }
+}
+
+/**
+ * Handles FAQ item clicks
+ */
+function handleFAQItemClick(item) {
+  const question = item.getAttribute('data-question');
+  const answer = guideMessages.faq[question];
+  showMessage(answer);
+  elements.faqContainer.classList.remove('active');
+}
+
+/**
+ * Handles user input in chat
+ */
+function handleUserInput(e) {
+  if (e.key === 'Enter') {
+    const text = sanitizeHTML(elements.userInput.value.toLowerCase());
+    if (text.includes('help')) {
+      if (!appState.currentUser) {
+        showAlert(
+          "LOGIN REQUIRED",
+          "Please login to access the tutorial.",
+          { confirm: true, confirmText: "LOGIN", onConfirm: () => {
+            elements.loginPopup.style.display = "block";
+          }}
+        );
+      } else {
+        startTutorial();
+      }
+    } else {
+      const randomResponse = guideMessages.general[
+        Math.floor(Math.random() * guideMessages.general.length)
+      ];
+      showMessage(randomResponse);
+    }
+    elements.userInput.value = '';
+    elements.inputContainer.classList.remove('active');
+  }
+}
+
+/**
+ * Handles login form submission
+ */
+function handleLoginSubmit(e) {
+  e.preventDefault();
+  const id = sanitizeHTML(elements.loginId.value);
+  const mobile = sanitizeHTML(elements.loginMobile.value);
+
+  if (!id || !mobile) {
+    showAlert("ERROR", "Both ID and Mobile are required", { confirm: true });
+    return;
+  }
+
+  const user = validateUser(id, mobile);
+  if (user) {
+    loginUser(user);
+  } else {
+    showAlert(
+      "ACCESS DENIED", 
+      "Invalid ID or Mobile. Must be exact 11-digit number.",
+      { confirm: true }
+    );
+  }
+}
+
+/**
+ * Creates the matrix background effect
+ */
+function createMatrixEffect() {
+  elements.matrixContainer.innerHTML = '';
+  
+  const canvas = document.createElement('canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  elements.matrixContainer.appendChild(canvas);
+  
+  const ctx = canvas.getContext('2d');
+  const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*";
+  const fontSize = 18;
+  const drops = [];
+  
+  for (let i = 0; i < Math.floor(canvas.width / fontSize); i++) {
+    drops[i] = {
+      y: Math.random() * -canvas.height,
+      speed: 2 + Math.random() * 5,
+      length: 10 + Math.floor(Math.random() * 20),
+      lastChar: 0
+    };
+  }
+  
+  function draw() {
+    ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.font = `${fontSize}px 'Fira Code', monospace`;
+    
+  for (let i = 0; i < drops.length; i++) {
+      const text = chars.charAt(Math.floor(Math.random() * chars.length));
+      
+      ctx.fillStyle = 'rgba(0, 255, 136, 0.8)';
+      ctx.fillText(text, i * fontSize, drops[i].y);
+      
+      ctx.fillStyle = 'rgba(0, 255, 136, 0.15)';
+      for (let j = 1; j < drops[i].length; j++) {
+        const trailY = drops[i].y - j * fontSize;
+        if (trailY > 0) {
+          const trailChar = chars.charAt(Math.floor(Math.random() * chars.length));
+          ctx.fillText(trailChar, i * fontSize, trailY);
+        }
+      }
+      
+      if (drops[i].y > canvas.height) {
+        drops[i].y = Math.random() * -100;
+      }
+      
+      drops[i].y += drops[i].speed;
+    }
+    
+    requestAnimationFrame(draw);
+  }
+  
+  draw();
+  
+  window.addEventListener('resize', function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+}
+
+/**
+ * Initializes the typewriter effect
+ */
+function initTypewriter() {
+  const typewriterText = [
+    "> INITIATING SECURITY PROTOCOLS...",
+    "> PENTESTING SIMULATIONS LOADED...",
+    "> CRYPTOGRAPHIC ALGORITHMS ENGAGED...",
+    "> NETWORK DEFENSE SYSTEMS ACTIVE...",
+    "> WELCOME TO THE CYBER WARRIOR PROGRAM..."
+  ];
+  
+  let twIndex = 0;
+  let charIndex = 0;
+  
+  function typeWriter() {
+    if (charIndex < typewriterText[twIndex].length) {
+      elements.typewriter.textContent = typewriterText[twIndex].substring(0, charIndex + 1);
+      charIndex++;
+      setTimeout(typeWriter, Math.random() * 30 + 30);
+    } else {
+      setTimeout(() => {
+        elements.typewriter.textContent = "";
+        charIndex = 0;
+        twIndex = (twIndex + 1) % typewriterText.length;
+        typeWriter();
+      }, 2000);
+    }
+  }
+  
+  typeWriter();
+}
+
+/**
+ * Initializes the loading screen animation
+ */
+function initLoadingScreen() {
+  let progress = 0;
+  const loadingDuration = 2500;
+  const startTime = Date.now();
+
+  function updateProgress() {
+    const elapsed = Date.now() - startTime;
+    progress = Math.min((elapsed / loadingDuration) * 100, 100);
+    elements.loadingBar.style.width = `${progress}%`;
+    
+    if (progress < 100) {
+      requestAnimationFrame(updateProgress);
+    } else {
+      setTimeout(() => {
+        elements.loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+          elements.loadingScreen.style.display = 'none';
+          elements.mainContent.style.display = 'flex';
+          initPageContent();
+        }, 500);
+      }, 300);
+    }
+  }
+
+  updateProgress();
+}
+
+/**
+ * Initializes page content after loading
+ */
+function initPageContent() {
+  elements.guide.classList.add('active');
+  
+  // Check if user is logged in via session storage
+  checkLoggedInUser();
+  
+  if (appState.isFirstVisit) {
+    showMessage("> Welcome to DSET Cyber Module! Please login to begin the tutorial.");
+    elements.nextButton.style.display = 'none';
+  } else {
+    startNormalMode();
+  }
+  
+  // For index.html only - add this line:
+  if (elements.typewriter) initTypewriter(); 
+
+  // Initialize footer links based on login status
+const userData = localStorage.getItem('loggedInUser');
+if (!userData) {
+  // Disable protected footer links if not logged in
+  document.querySelectorAll('.footer-links a.protected-link').forEach(link => {
+    link.style.pointerEvents = 'none';
+    link.style.opacity = '0.5';
+    link.style.cursor = 'not-allowed';
+  });
+} else {
+  // Enable protected footer links if logged in
+  document.querySelectorAll('.footer-links a.protected-link').forEach(link => {
+    link.style.pointerEvents = 'auto';
+    link.style.opacity = '1';
+    link.style.cursor = 'pointer';
+  });
+}
+}
+
+/**
+ * Loads users from Excel file with robust error handling
+ */
+async function loadUsersFromExcel() {
+  try {
+    console.log('Attempting to load users.xlsx...');
+    const response = await fetch('./users.xlsx');
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Excel file: HTTP ${response.status}`);
+    }
+    
+    console.log('Excel file found, processing...');
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const excelData = XLSX.utils.sheet_to_json(worksheet);
+
+    // Map Excel data to user objects (focus on ID and Mobile)
+    userDatabase = excelData.map(row => {
+      const get = (...keys) => {
+        for (const k of keys) {
+          if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') return row[k];
+        }
+        return '';
+      };
+      return {
+        ID: String(get('ID', 'Employee ID')).trim(),
+        Name: String(get('Name', 'Employee Name')).trim(),
+        Mobile: String(get('Mobile', 'Mobile No')).trim(),
+        Role: String(get('Role', 'Designation') || 'student').trim()
+      };
+    }).filter(user => user.ID && user.Name && user.Mobile);
+
+    console.log('Loaded users:', userDatabase);
+  } catch (error) {
+    console.error('Error loading Excel:', error);
+    // Fallback test users
+    userDatabase = [
+      { ID: "STU101", Name: "Test Student", Mobile: "01712345678", Role: "student" },
+      { ID: "TEACH202", Name: "Test Teacher", Mobile: "01876543210", Role: "teacher" }
+    ];
+    showAlert("NOTE", "Using test data - Login with ID: STU101, Mobile: 01712345678", { confirm: true });
+  }
+}
+
+/**
+ * Handles footer link clicks with security checks
+ */
+function handleFooterLinkClick(e) {
+  const href = this.getAttribute('href');
+  
+  // Allow About Us page without login
+  if (href && href.includes('about.html')) {
+    return; // Allow the click to proceed normally
+  }
+  
+  if (!appState.currentUser) {
+    e.preventDefault();
+    showAlert(
+      "LOGIN REQUIRED",
+      "Please login to access this section.",
+      { 
+        confirm: true, 
+        confirmText: "LOGIN", 
+        onConfirm: () => elements.loginPopup.style.display = "block"
+      }
+    );
+  }
+}
+
+/**
+ * Sanitizes HTML to prevent XSS attacks
+ */
+function sanitizeHTML(str) {
+  const temp = document.createElement('div');
+  temp.textContent = str;
+  return temp.innerHTML;
+}
+
+function normalizeMobile(mobile) {
+  // Normalize to Bangladesh local 11-digit format
+  let digits = String(mobile || '').replace(/\D/g, '');
+
+  // Strip Bangladesh country code if present
+  if (digits.startsWith('880')) {
+    digits = digits.slice(3);
+  }
+
+  // If 10 digits and starts with '1', prefix leading zero (e.g., 88017XXXXXXXX -> 017XXXXXXXX)
+  if (digits.length === 10 && digits.startsWith('1')) {
+    digits = '0' + digits;
+  }
+
+  // Strict validation
+  if (digits.length !== 11) {
+    throw new Error('Mobile must be exactly 11 digits');
+  }
+
+  return digits;
+}
+
+/**
+ * SECURITY: Comprehensive navigation protection
+ * Prevents all unauthorized access to protected pages
+ */
+function setupSecureNavigation() {
+  // First, check if we're already on a protected page without authentication
+  const currentPage = window.location.pathname.split('/').pop();
+  
+  // About Us page is accessible without login
+  if (protectedPages.includes(currentPage)) {
+    const userData = localStorage.getItem('loggedInUser');
+    if (!userData) {
+      alert('Authentication required. Redirecting to login...');
+      window.location.href = 'index.html';
+      return; // Stop execution
+    }
+  }
+  
+  // Single event handler for ALL click events (capturing phase)
+  document.addEventListener('click', function(e) {
+    // Find the clicked link element
+    let target = e.target;
+    while (target && target.tagName !== 'A') {
+      target = target.parentElement;
+    }
+    
+    if (!target || target.tagName !== 'A') return;
+    
+    const href = target.getAttribute('href');
+    
+    // Check if link is to a protected page (excluding About Us)
+    if (href && protectedPages.some(page => href.includes(page))) {
+      // Check if user is logged in
+      const userData = localStorage.getItem('loggedInUser');
+      
+      if (!userData) {
+        // Prevent ALL types of clicks (left, middle, right)
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        
+        // Show alert
+        showAlert(
+          "LOGIN REQUIRED",
+          "Please login to access this section.",
+          { 
+            confirm: true, 
+            confirmText: "LOGIN", 
+            onConfirm: () => {
+              document.getElementById('login-popup').style.display = "block";
+            }
+          }
+        );
+        
+        return false;
+      }
+    }
+  }, true); // Use capturing phase to catch events early
+  
+  // Also prevent middle-click by capturing auxclick events
+  document.addEventListener('auxclick', function(e) {
+    if (e.button === 1) { // Middle mouse button
+      let target = e.target;
+      while (target && target.tagName !== 'A') {
+        target = target.parentElement;
+      }
+      
+      if (!target || target.tagName !== 'A') return;
+      
+      const href = target.getAttribute('href');
+      
+      // Check if link is to a protected page (excluding About Us)
+      if (href && protectedPages.some(page => href.includes(page))) {
+        // Check if user is logged in
+        const userData = localStorage.getItem('loggedInUser');
+        
+        if (!userData) {
+          // Prevent middle-click
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // Show alert
+          showAlert(
+            "LOGIN REQUIRED",
+            "Please login to access this section.",
+            { 
+              confirm: true, 
+              confirmText: "LOGIN", 
+              onConfirm: () => {
+                document.getElementById('login-popup').style.display = "block";
+              }
+            }
+          );
+          
+          return false;
+        }
+      }
+    }
+  }, true);
+}
+
+/**
+ * Sets up all event listeners
+ */
+function setupEventListeners() {
+  // Guide controls
+  elements.faqButton.addEventListener('click', handleFAQButton);
+  elements.chatButton.addEventListener('click', handleChatButton);
+  elements.faqItems.forEach(item => {
+    item.addEventListener('click', () => handleFAQItemClick(item));
+  });
+  elements.userInput.addEventListener('keypress', handleUserInput);
+
+  // Login/logout
+  elements.loginBtn.addEventListener("click", () => {
+    elements.loginPopup.style.display = "block";
+    elements.loginId.focus(); // Auto-focus ID field when popup opens
+  });
+  
+  elements.closeBtn.addEventListener("click", () => {
+    elements.loginPopup.style.display = "none";
+  });
+
+  // Mobile number input formatting
+  elements.loginMobile.addEventListener('input', function(e) {
+    // Remove any non-digit characters
+    this.value = this.value.replace(/\D/g, '');
+  });
+
+  elements.loginForm.addEventListener("submit", handleLoginSubmit);
+  elements.logoutBtn.addEventListener("click", logoutUser);
+
+  // Join button
+  elements.joinBtn.addEventListener("click", (e) => {
+    if (!appState.currentUser) {
+      e.preventDefault();
+      showAlert(
+        "LOGIN REQUIRED",
+        "Please login to access the courses and other features.",
+        { 
+          confirm: true, 
+          confirmText: "LOGIN", 
+          onConfirm: () => elements.loginPopup.style.display = "block"
+        }
+      );
+    }
+  });
+
+  // Footer links protection
+  const footerLinks = [
+    elements.footerCourseLink,
+    elements.footerQuizLink,
+    elements.footerResourcesLink,
+    elements.footerFundamentalsLink,
+    elements.footerAttackLink,
+    elements.footerDefenseLink,
+    elements.footerActionLink
+  ];
+  
+  footerLinks.forEach(link => {
+    if (link) {
+      link.addEventListener('click', handleFooterLinkClick);
+    }
+  });
+
+  // Close popup when clicking outside
+  window.addEventListener("click", (e) => {
+    if (e.target === elements.loginPopup) {
+      elements.loginPopup.style.display = "none";
+    }
+    if (e.target === elements.alertOverlay) {
+      hideAlert();
+    }
+  });
+
+  // Allow pressing Escape to close popup
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && elements.loginPopup.style.display === 'block') {
+      elements.loginPopup.style.display = 'none';
+    }
+  });
+}
+
+/**
+ * Initializes the application
+ */
+async function initialize() {
+  try {
+    await loadUsersFromExcel();
+    setupEventListeners();
+    createMatrixEffect();
+    initLoadingScreen();
+    
+    // Setup secure navigation (MUST be called after other setup)
+    setupSecureNavigation();
+    
+    // Check for saved login on startup
+    checkLoggedInUser();
+    
+    // Add session cleanup for fresh browser detection
+    window.addEventListener('beforeunload', () => {
+      if (!sessionStorage.getItem('currentUser')) {
+        sessionStorage.removeItem('hasShownWelcome');
+      }
+    });
+
+  } catch (error) {
+    console.error('Initialization error:', error);
+    showAlert(
+      "INIT ERROR",
+      "Failed to initialize application: " + error.message,
+      { 
+        confirm: true, 
+        confirmText: "RELOAD", 
+        onConfirm: () => window.location.reload() 
+      }
+    );
+  }
+}
+
+// Start the application
+document.addEventListener('DOMContentLoaded', initialize);
+</script>
+</body>
+</html>

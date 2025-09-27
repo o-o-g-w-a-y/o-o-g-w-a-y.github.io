@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSET | Cyber Security Quizzes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --neon-blue: #00f2ff;
+      --neon-purple: #a100ff;
+      --neon-pink: #ff00e6;
+      --neon-green: #00ff88;
+      --dark-bg: #0a0e1a;
+      --darker-bg: #050811;
+      --glow-intensity: 0 0 15px;
+      --terminal-cursor: #00ff41;
+    }
+
+    /* ===== CYBER LOADING SCREEN ===== */
+    #cyber-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--darker-bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .loading-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+      letter-spacing: 5px;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .loading-text::after {
+      content: '_';
+      position: absolute;
+      right: -20px;
+      animation: blink 1s step-end infinite;
+      color: var(--terminal-cursor);
+    }
+    
+    .loading-bar-container {
+      width: 400px;
+      height: 8px;
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .loading-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+      transition: width 0.1s ease-out;
+    }
+    
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      animation: scan 1.5s infinite;
+    }
+
+    /* ===== MAIN CONTENT (HIDDEN INITIALLY) ===== */
+    .main-content {
+      display: none;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #ffffff;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== CYBERPUNK NAVBAR ===== */
+    .navbar-custom {
+      background: rgba(10, 14, 26, 0.95) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+      padding: 0.8rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 2.4rem !important;
+      font-weight: 900 !important;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: var(--glow-intensity) rgba(161, 0, 255, 0.7);
+      letter-spacing: 3px;
+      position: relative;
+      padding-right: 20px;
+      margin-right: 1rem;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    .navbar-brand:hover {
+      text-shadow: 0 0 25px var(--neon-purple), 
+                   0 0 20px var(--neon-blue),
+                   0 0 35px rgba(161, 0, 255, 0.5);
+      transform: scale(1.05) !important;
+    }
+
+    .navbar-brand::after {
+      content: '_';
+      position: absolute;
+      right: 0;
+      animation: blink 1s step-end infinite;
+      color: var(--terminal-cursor);
+      font-weight: 400;
+    }
+
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700 !important;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: white !important;
+      margin: 0 12px;
+      position: relative;
+      padding: 8px 0 !important;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      transition: width 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--neon-blue) !important;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+    }
+
+    .nav-link:hover::before {
+      width: 100%;
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .nav-link.active {
+      color: var(--neon-green) !important;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+    }
+
+    .nav-link.active::before {
+      width: 100%;
+      background: var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    .navbar-toggler {
+      border: 1px solid var(--neon-blue);
+      padding: 0.5rem;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0, 242, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    /* ===== QUIZ SELECTION PAGE STYLES ===== */
+    .quiz-container {
+      padding-top: 120px;
+      padding-bottom: 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+      background: rgba(5, 8, 17, 0.7);
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .quiz-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+      letter-spacing: 2px;
+    }
+
+    .quiz-header p {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.2rem;
+      color: #b2f5ea;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .quiz-card {
+      background: rgba(5, 8, 17, 0.6);
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      border-radius: 8px;
+      padding: 30px;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quiz-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .quiz-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 0 40px rgba(0, 242, 255, 0.3);
+      border-color: transparent;
+    }
+
+    .quiz-card:hover::before {
+      opacity: 0.7;
+    }
+
+    .quiz-card h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .quiz-card h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: var(--neon-blue);
+      transition: width 0.3s ease;
+    }
+
+    .quiz-card:hover h2::after {
+      width: 100%;
+      background: var(--neon-green);
+    }
+
+    .quiz-card p {
+      font-family: 'Rajdhani', sans-serif;
+      color: #b2f5ea;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: var(--neon-green);
+      margin-bottom: 20px;
+    }
+
+    .quiz-difficulty {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .difficulty-beginner {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--neon-green);
+    }
+
+    .difficulty-intermediate {
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid var(--neon-blue);
+    }
+
+    .difficulty-advanced {
+      background: rgba(161, 0, 255, 0.1);
+      border: 1px solid var(--neon-purple);
+    }
+
+    .difficulty-expert {
+      background: rgba(255, 0, 230, 0.1);
+      border: 1px solid var(--neon-pink);
+    }
+
+    .btn-quiz {
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.4),
+                  inset 0 0 10px rgba(0, 242, 255, 0.2);
+      text-decoration: none;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .btn-quiz:hover {
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.6),
+                  inset 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .btn-quiz::before {
+      content: '>';
+      margin-right: 8px;
+      color: var(--neon-green);
+    }
+
+    /* ===== MATRIX BACKGROUND ===== */
+    .matrix-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    
+    @keyframes scan {
+      0% { right: 100%; }
+      100% { right: -20px; }
+    }
+
+    /* ===== RESPONSIVE ADJUSTMENTS ===== */
+    @media (max-width: 992px) {
+      .quiz-header h1 {
+        font-size: 2.8rem;
+      }
+      
+      .quiz-container {
+        padding: 100px 20px 40px;
+      }
+      
+      .quiz-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      
+      .loading-text {
+        font-size: 2.5rem;
+      }
+      
+      .loading-bar-container {
+        width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .quiz-header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .quiz-header p {
+        font-size: 1rem;
+      }
+      
+      .quiz-card h2 {
+        font-size: 1.5rem;
+      }
+      
+      .btn-quiz {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .loading-text {
+        font-size: 2rem;
+        letter-spacing: 3px;
+      }
+      
+      .loading-bar-container {
+        width: 250px;
+        height: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .quiz-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 576px) {
+      .quiz-header {
+        padding: 1rem;
+      }
+      .quiz-header h1 {
+        font-size: 1.3rem;
+      }
+      .quiz-header p {
+        font-size: 0.95rem;
+      }
+      .quiz-card {
+        padding: 10px;
+        font-size: 0.95rem;
+      }
+      .quiz-card h2 {
+        font-size: 1.1rem;
+      }
+      .btn-quiz {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      .navbar-custom {
+        padding: 0.5rem 0.5rem;
+      }
+      .navbar-brand {
+        font-size: 1.1rem !important;
+        padding-right: 8px;
+        margin-right: 0.5rem;
+      }
+      .nav-link {
+        font-size: 0.95rem;
+        margin: 0 4px;
+        padding: 6px 0 !important;
+      }
+    }
+    @media (max-width: 400px) {
+      .quiz-header {
+        padding: 0.5rem;
+      }
+      .quiz-header h1 {
+        font-size: 0.9rem;
+      }
+      .quiz-card {
+        padding: 4px;
+        font-size: 0.8rem;
+      }
+      .quiz-card h2 {
+        font-size: 0.8rem;
+      }
+      .btn-quiz {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+      .navbar-brand {
+        font-size: 0.7rem !important;
+      }
+      .nav-link {
+        font-size: 0.7rem;
+      }
+    }
+  /* ===== FOOTER ===== */
+  .cyber-footer {
+    background: rgba(5, 8, 17, 0.95);
+    border-top: 1px solid rgba(0, 242, 255, 0.3);
+    padding: 60px 0 30px;
+    position: relative;
+  }
+
+  .cyber-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 2.4rem !important;
+    font-weight: 900 !important;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: var(--glow-intensity) rgba(161, 0, 255, 0.7);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+
+  .footer-about p {
+    color: #b2f5ea;
+    font-family: 'Rajdhani', sans-serif;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .footer-links h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-green);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+  }
+
+  .footer-links ul { list-style: none; padding: 0; }
+  .footer-links li { margin-bottom: 10px; }
+
+  .footer-links a {
+    color: #b2f5ea;
+    font-family: 'Rajdhani', sans-serif;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 15px;
+  }
+
+  .footer-links a::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--neon-blue);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--neon-blue);
+    padding-left: 20px;
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  }
+
+  .footer-links a:hover::before { opacity: 1; left: 0; }
+
+  .footer-social h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-green);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+  }
+
+  .social-icons { display: flex; gap: 15px; }
+
+  .social-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 242, 255, 0.1);
+    border: 1px solid rgba(0, 242, 255, 0.3);
+    color: white;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .social-icon:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3); }
+
+  .social-icon.discord { background: rgba(88, 101, 242, 0.1); border-color: rgba(88, 101, 242, 0.3); }
+  .social-icon.discord:hover { background: #5865F2; box-shadow: 0 10px 20px rgba(88, 101, 242, 0.4); }
+
+  .social-icon.facebook { background: rgba(24, 119, 242, 0.1); border-color: rgba(24, 119, 242, 0.3); }
+  .social-icon.facebook:hover { background: #1877F2; box-shadow: 0 10px 20px rgba(24, 119, 242, 0.4); }
+
+  .copyright {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 242, 255, 0.2);
+    text-align: center;
+    color: #b2f5ea;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .copyright a { color: white !important; text-decoration: none; transition: all 0.3s ease; }
+  .copyright a:hover { color: #ccc !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Cyberpunk Loading Screen -->
+  <div id="cyber-loading">
+    <div class="loading-text">LOADING</div>
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loadingBar"></div>
+    </div>
+  </div>
+
+  <!-- Main Content (Hidden Initially) -->
+  <div class="main-content">
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">DSET</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="course.html">Course</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+            <li class="nav-item"><a class="nav-link active" href="quiz.html">Quiz</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Resources</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <h1>CYBER SECURITY QUIZZES</h1>
+        <p>Test your knowledge and skills with our interactive cybersecurity challenges. Select a quiz below to begin your assessment.</p>
+      </div>
+
+      <div class="quiz-grid">
+        <!-- Quiz Card 1 -->
+        <div class="quiz-card">
+          <h2>Cyber Intro</h2>
+          <div class="quiz-meta">
+            <span>10 Questions</span>
+            <span class="quiz-difficulty difficulty-beginner">BEGINNER</span>
+          </div>
+          <p>Test your understanding of basic cybersecurity concepts, terminology, and security principles.</p>
+          <a href="Quiz/quiz1.html" class="btn-quiz">START QUIZ</a>
+        </div>
+
+        <!-- Quiz Card 2 -->
+        <div class="quiz-card">
+          <h2>Network Security</h2>
+          <div class="quiz-meta">
+            <span>15 Questions</span>
+            <span class="quiz-difficulty difficulty-intermediate">INTERMEDIATE</span>
+          </div>
+          <p>Challenge your knowledge of network protocols, firewalls, VPNs, and wireless security.</p>
+          <a href="Quiz/quiz2.html" class="btn-quiz">START QUIZ</a>
+        </div>
+
+        <!-- Quiz Card 3 -->
+        <div class="quiz-card">
+          <h2>Attack Vectors</h2>
+          <div class="quiz-meta">
+            <span>12 Questions</span>
+            <span class="quiz-difficulty difficulty-intermediate">INTERMEDIATE</span>
+          </div>
+          <p>Identify different types of cyber attacks and understand how they exploit vulnerabilities.</p>
+          <a href="Quiz/quiz3.html" class="btn-quiz">START QUIZ</a>
+        </div>
+
+        <!-- Quiz Card 4 -->
+        <div class="quiz-card">
+          <h2>Defense Strategies</h2>
+          <div class="quiz-meta">
+            <span>15 Questions</span>
+            <span class="quiz-difficulty difficulty-advanced">ADVANCED</span>
+          </div>
+          <p>Demonstrate your knowledge of security controls, encryption, and incident response.</p>
+          <a href="Quiz/quiz4.html" class="btn-quiz">START QUIZ</a>
+        </div>
+
+        
+        <!-- Quiz Card 6 -->
+        <div class="quiz-card">
+          <h2>Certification</h2>
+          <div class="quiz-meta">
+            <span>25 Questions</span>
+            <span class="quiz-difficulty difficulty-expert">EXPERT</span>
+          </div>
+          <p>Simulate certification exam questions for CISSP, CEH, Security+, and other industry certs.</p>
+          <a href="Quiz/quiz6.html" class="btn-quiz">START QUIZ</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matrix Background -->
+    <div class="matrix-container" id="matrixContainer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ===== LOADING SCREEN FUNCTIONALITY =====
+    document.addEventListener('DOMContentLoaded', function() {
+      const loadingScreen = document.getElementById('cyber-loading');
+      const loadingBar = document.getElementById('loadingBar');
+      const mainContent = document.querySelector('.main-content');
+      
+      let progress = 0;
+      
+      function updateProgress() {
+        progress += Math.random() * 3 + 1;
+        if (progress > 100) progress = 100;
+        
+        loadingBar.style.width = `${progress}%`;
+        
+        if (progress < 100) {
+          setTimeout(updateProgress, 30 + Math.random() * 50);
+        } else {
+          // Loading complete - add finishing effects
+          loadingBar.style.boxShadow = '0 0 25px rgba(0, 242, 255, 0.9)';
+          
+          // Fade out loading screen
+          setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+              loadingScreen.style.display = 'none';
+              mainContent.style.display = 'block';
+              initializePageContent();
+            }, 500);
+          }, 300);
+        }
+      }
+      
+      // Start loading sequence
+      setTimeout(updateProgress, 300);
+    });
+
+    // ===== PAGE CONTENT FUNCTIONALITY =====
+    function initializePageContent() {
+      // Highlight the active nav item
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // Matrix Background Animation
+      const matrixContainer = document.getElementById("matrixContainer");
+      const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*";
+      
+      function createMatrixCanvas() {
+        const canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        matrixContainer.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        const fontSize = 18;
+        const drops = [];
+        
+        // Initialize drops
+        for (let i = 0; i < Math.floor(canvas.width / fontSize); i++) {
+          drops[i] = {
+            y: Math.random() * -canvas.height,
+            speed: 2 + Math.random() * 5,
+            length: 10 + Math.floor(Math.random() * 20),
+            lastChar: 0
+          };
+        }
+        
+        function draw() {
+          // Dark translucent background for trail effect
+          ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          ctx.font = `${fontSize}px 'Fira Code', monospace`;
+          
+          for (let i = 0; i < drops.length; i++) {
+            const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+            
+            // Bright head character
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.8)';
+            ctx.fillText(text, i * fontSize, drops[i].y);
+            
+            // Dim trail characters
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.15)';
+            for (let j = 1; j < drops[i].length; j++) {
+              const trailY = drops[i].y - j * fontSize;
+              if (trailY > 0) {
+                const trailChar = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillText(trailChar, i * fontSize, trailY);
+              }
+            }
+            
+            // Reset drop when it reaches bottom
+            if (drops[i].y > canvas.height) {
+              drops[i].y = Math.random() * -100;
+            }
+            
+            drops[i].y += drops[i].speed;
+          }
+          
+          requestAnimationFrame(draw);
+        }
+        
+        draw();
+      }
+      
+      // Initialize matrix effect
+      createMatrixCanvas();
+
+      // Clean up on window resize
+      window.addEventListener('resize', function() {
+        matrixContainer.innerHTML = '';
+        createMatrixCanvas();
+      });
+    }
+  </script>
+<!-- Footer -->
+  <footer class="cyber-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-5 mb-lg-0">
+          <div class="footer-about">
+            <div class="footer-logo">DSET</div>
+            <p>DSET is a premier cyber security training platform dedicated to equipping individuals with the skills needed to defend against digital threats in our interconnected world.</p>
+            <p>> SECURE • EDUCATE • INNOVATE</p>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-5 mb-md-0">
+          <div class="footer-links">
+            <h3>LINKS</h3>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="course.html">Courses</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="quiz.html">Quiz</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-5 mb-md-0">
+          <div class="footer-links">
+            <h3>COURSES</h3>
+            <ul>
+              <li><a href="#">CS Basics</a></li>
+              <li><a href="#">Networking</a></li>
+              <li><a href="#">Cyber Attacks</a></li>
+              <li><a href="#">Cyber Defense</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="footer-social">
+            <h3>CONNECT WITH US</h3>
+            <div class="social-icons">
+              <a href="https://discord.gg/example" class="social-icon discord" target="_blank">
+                <i class="fab fa-discord"></i>
+              </a>
+              <a href="https://facebook.com/example" class="social-icon facebook" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+            <p class="mt-4">Join our community of cyber security professionals and enthusiasts.</p>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 DSET CYBER SECURITY TRAINING. ALL RIGHTS RESERVED. | <a href="#">PRIVACY POLICY</a> | <a href="#">TERMS OF SERVICE</a> | Made by <a href="https://www.facebook.com/ishan.das.770995">Ishan Das</a> and <a href="https://www.facebook.com/overpower.gaming.94">Sidratul Rahman Safwan</a></p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

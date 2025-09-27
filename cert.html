@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-blue: #00f2ff;
+      --neon-purple: #a100ff;
+      --neon-pink: #ff00e6;
+      --neon-green: #00ff88;
+      --dark-bg: #0a0e1a;
+      --darker-bg: #050811;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      min-height: 100vh;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 30px;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+      letter-spacing: 2px;
+    }
+    
+    .btn-download {
+      display: inline-block;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.4),
+                  inset 0 0 10px rgba(0, 242, 255, 0.2);
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 40px;
+    }
+    
+    .btn-download:hover {
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.6),
+                  inset 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 8, 17, 0.95);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: rgba(10, 14, 26, 0.95);
+      padding: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+    
+    .modal h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(5, 8, 17, 0.7);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      color: white;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+    }
+    
+    .btn-generate {
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: transparent;
+      color: var(--neon-green);
+      border: 2px solid var(--neon-green);
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.4),
+                  inset 0 0 10px rgba(0, 255, 136, 0.2);
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .btn-generate:hover {
+      color: var(--neon-blue);
+      border-color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--neon-blue);
+      box-shadow: 0 0 25px rgba(0, 242, 255, 0.6),
+                  inset 0 0 15px rgba(0, 242, 255, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    /* Certificate styles */
+    .certificate-screen {
+      display: none;
+      text-align: center;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 40px 20px;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+
+    .certificate-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+      letter-spacing: 2px;
+      font-size: 1.8rem;
+    }
+
+    .certificate-screen p {
+      font-family: 'Rajdhani', sans-serif;
+      color: #b2f5ea;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .certificate-preview {
+      background: linear-gradient(135deg, #050811 0%, #0a0e1a 100%);
+      padding: 25px;
+      margin: 20px auto;
+      width: 800px;
+      height: 500px;
+      border-radius: 4px;
+      box-shadow: 0 0 50px rgba(0, 242, 255, 0.2),
+                  0 0 30px rgba(161, 0, 255, 0.2),
+                  inset 0 0 20px rgba(0, 0, 0, 0.5);
+      color: #ffffff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    /* Grid background */
+    .grid-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(to right, rgba(0, 242, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: 1;
+      opacity: 0.5;
+    }
+
+    /* Corner elements */
+    .corner {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      z-index: 5;
+    }
+
+    .corner-tl {
+      top: 10px;
+      left: 10px;
+      border-top: 2px solid var(--neon-blue);
+      border-left: 2px solid var(--neon-blue);
+    }
+
+    .corner-tr {
+      top: 10px;
+      right: 10px;
+      border-top: 2px solid var(--neon-blue);
+      border-right: 2px solid var(--neon-blue);
+    }
+
+    .corner-bl {
+      bottom: 10px;
+      left: 10px;
+      border-bottom: 2px solid var(--neon-blue);
+      border-left: 2px solid var(--neon-blue);
+    }
+
+    .corner-br {
+      bottom: 10px;
+      right: 10px;
+      border-bottom: 2px solid var(--neon-blue);
+      border-right: 2px solid var(--neon-blue);
+    }
+
+    /* Certificate content */
+    .certificate-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .certificate-header {
+      margin-bottom: 5px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    .header-top {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--neon-green);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .header-main {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--neon-blue);
+      line-height: 1.2;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 242, 255, 0.7);
+      letter-spacing: 2px;
+    }
+
+    .header-bottom {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      color: var(--neon-purple);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .certificate-body {
+      margin: 10px 0;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .presented-to {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--neon-green);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .recipient-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: white;
+      margin: 10px 0;
+      padding: 10px;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .recipient-name::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.4), transparent);
+      animation: shine 3s infinite;
+    }
+
+    .achievement-desc {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      color: #b2f5ea;
+      line-height: 1.4;
+      max-width: 600px;
+      margin: 0 auto 15px;
+      padding: 0 10px;
+    }
+
+    .certificate-details {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .detail-item {
+      text-align: center;
+      padding: 10px 15px;
+      background: rgba(10, 14, 26, 0.7);
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      border-radius: 4px;
+      min-width: 140px;
+    }
+
+    .detail-label {
+      display: block;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--neon-purple);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .detail-value {
+      display: inline;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .certificate-footer {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    .signatures {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .signature {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .signature-line {
+      width: 130px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      margin: 0 auto 6px;
+      position: relative;
+    }
+
+    .signature-line::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--neon-blue);
+      opacity: 0.3;
+      filter: blur(2px);
+    }
+
+    .signature-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      color: var(--neon-blue);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .signature-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: var(--neon-purple);
+    }
+
+    /* Animated elements */
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--neon-green), transparent);
+      box-shadow: 0 0 8px var(--neon-green);
+      animation: scan 4s linear infinite;
+      z-index: 3;
+      opacity: 0.7;
+    }
+
+    .glow-effect {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.1) 0%, transparent 60%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Animations */
+    @keyframes scan {
+      0% {
+        top: 0;
+      }
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes shine {
+      0% {
+        left: -100%;
+      }
+      20% {
+        left: 100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .certificate-preview {
+        width: 90%;
+        height: auto;
+        min-height: 450px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .certificate-preview {
+        padding: 20px 15px;
+      }
+      
+      .header-main {
+        font-size: 1.4rem;
+      }
+      
+      .recipient-name {
+        font-size: 1.4rem;
+        padding: 8px;
+      }
+      
+      .achievement-desc {
+        font-size: 0.8rem;
+        padding: 0 8px;
+      }
+      
+      .certificate-details {
+        gap: 15px;
+      }
+      
+      .detail-item {
+        min-width: 120px;
+        padding: 8px 12px;
+      }
+      
+      .detail-value {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .certificate-screen {
+        padding: 30px 15px;
+      }
+      
+      .certificate-screen h2 {
+        font-size: 1.5rem;
+      }
+      
+      .certificate-preview {
+        padding: 15px 10px;
+      }
+      
+      .header-main {
+        font-size: 1.2rem;
+      }
+      
+      .recipient-name {
+        font-size: 1.2rem;
+      }
+      
+      .achievement-desc {
+        font-size: 0.75rem;
+      }
+      
+      .certificate-details {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .detail-item {
+        width: 100%;
+        max-width: 180px;
+      }
+      
+      .signatures {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .signature {
+        width: 100%;
+        max-width: 180px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Certificate Generator</h1>
+    <button class="btn-download" id="downloadBtn">Download Certificate</button>
+    
+    <div class="certificate-screen" id="certificateScreen">
+      <h2>YOUR CYBER SECURITY CERTIFICATE</h2>
+      <p>Congratulations! Your certificate is ready for download.</p>
+      
+      <div class="certificate-preview" id="certificatePreview">
+        <!-- Glowing corner elements -->
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        
+        <!-- Grid background -->
+        <div class="grid-lines"></div>
+        
+        <!-- Certificate content -->
+        <div class="certificate-content">
+          <div class="certificate-header">
+            <div class="header-top">OFFICIAL CERTIFICATION</div>
+            <div class="header-main">CYBER SECURITY<br>PROFICIENCY</div>
+            <div class="header-bottom">DIGITAL SECURITY & ETHICAL TRAINING</div>
+          </div>
+          
+          <div class="certificate-body">
+            <div class="presented-to">THIS CERTIFIES THAT</div>
+            <div class="recipient-name" id="certificateName">[YOUR NAME]</div>
+            <div class="achievement-desc">HAS SUCCESSFULLY DEMONSTRATED EXPERT KNOWLEDGE IN CYBER SECURITY PRINCIPLES AND TECHNIQUES</div>
+            
+            <div class="certificate-details">
+              <div class="detail-item">
+                <span class="detail-label">DATE OF ISSUE</span>
+                <span class="detail-value" id="certificateDate">[DATE]</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="certificate-footer">
+            <div class="signatures">
+              <div class="signature">
+                <div class="signature-line"></div>
+                <div class="signature-name">JOHN SMITH</div>
+                <div class="signature-title">DIRECTOR OF CYBER SECURITY</div>
+              </div>
+              <div class="signature">
+                <div class="signature-line"></div>
+                <div class="signature-name">SARAH JOHNSON</div>
+                <div class="signature-title">CHIEF LEARNING OFFICER</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Animated elements -->
+        <div class="scan-line"></div>
+        <div class="glow-effect"></div>
+      </div>
+      
+      <button class="btn-download" id="finalDownloadBtn" style="margin-top: 30px;">Download Certificate</button>
+    </div>
+  </div>
+  
+  <!-- Name Input Modal -->
+  <div class="modal" id="nameModal">
+    <div class="modal-content">
+      <h2>Enter Your Name</h2>
+      <input type="text" id="userName" class="form-input" placeholder="Your Full Name">
+      <button class="btn-generate" id="generateBtn">Generate Certificate</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const downloadBtn = document.getElementById('downloadBtn');
+      const generateBtn = document.getElementById('generateBtn');
+      const finalDownloadBtn = document.getElementById('finalDownloadBtn');
+      const nameModal = document.getElementById('nameModal');
+      const certificateScreen = document.getElementById('certificateScreen');
+      const userNameInput = document.getElementById('userName');
+      const certificateName = document.getElementById('certificateName');
+      const certificateDate = document.getElementById('certificateDate');
+      
+      // Set current date
+      const today = new Date();
+      certificateDate.textContent = today.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      // Show modal when download button is clicked
+      downloadBtn.addEventListener('click', function() {
+        nameModal.style.display = 'flex';
+      });
+      
+      // Generate certificate when generate button is clicked
+      generateBtn.addEventListener('click', function() {
+        const name = userNameInput.value.trim();
+        
+        if (name) {
+          certificateName.textContent = name.toUpperCase();
+          nameModal.style.display = 'none';
+          certificateScreen.style.display = 'block';
+        } else {
+          alert('Please enter your name');
+        }
+      });
+      
+      // Download certificate as image
+      finalDownloadBtn.addEventListener('click', function() {
+        html2canvas(document.getElementById('certificatePreview')).then(function(canvas) {
+          const link = document.createElement('a');
+          link.download = 'Cyber_Security_Certificate.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      });
+      
+      // Close modal if clicked outside
+      window.addEventListener('click', function(event) {
+        if (event.target === nameModal) {
+          nameModal.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

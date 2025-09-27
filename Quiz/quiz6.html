@@ -1,0 +1,2523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSET | Final Cyber Security Certification Quiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-blue: #00f2ff;
+      --neon-purple: #a100ff;
+      --neon-pink: #ff00e6;
+      --neon-green: #00ff88;
+      --dark-bg: #0a0e1a;
+      --darker-bg: #050811;
+      --glow-intensity: 0 0 15px;
+      --terminal-cursor: #00ff41;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #ffffff;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar-custom {
+      background: rgba(10, 14, 26, 0.95) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+      padding: 0.8rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 2.4rem !important;
+      font-weight: 900 !important;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: var(--glow-intensity) rgba(161, 0, 255, 0.7);
+      letter-spacing: 3px;
+      position: relative;
+      padding-right: 20px;
+      margin-right: 1rem;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    .navbar-brand:hover {
+      text-shadow: 0 0 25px var(--neon-purple), 
+                   0 0 20px var(--neon-blue),
+                   0 0 35px rgba(161, 0, 255, 0.5);
+      transform: scale(1.05) !important;
+    }
+
+    .navbar-brand::after {
+      content: '_';
+      position: absolute;
+      right: 0;
+      animation: blink 1s step-end infinite;
+      color: var(--terminal-cursor);
+      font-weight: 400;
+    }
+
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700 !important;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: white !important;
+      margin: 0 12px;
+      position: relative;
+      padding: 8px 0 !important;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      transition: width 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--neon-blue) !important;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+    }
+
+    .nav-link:hover::before {
+      width: 100%;
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .nav-link.active {
+      color: var(--neon-green) !important;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+    }
+
+    .nav-link.active::before {
+      width: 100%;
+      background: var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    .navbar-toggler {
+      border: 1px solid var(--neon-blue);
+      padding: 0.5rem;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0, 242, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    /* ===== QUIZ PAGE STYLES ===== */
+    .quiz-page-container {
+      padding-top: 120px;
+      padding-bottom: 50px;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      background: rgba(5, 8, 17, 0.7);
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .quiz-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+      letter-spacing: 2px;
+    }
+
+    .quiz-header p {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      color: #b2f5ea;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      color: var(--neon-green);
+      margin: 20px 0;
+      padding: 10px 15px;
+      background: rgba(5, 8, 17, 0.8);
+      border-radius: 5px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+    }
+
+    .timer {
+      color: var(--neon-pink);
+      font-weight: bold;
+    }
+
+    .start-screen {
+      text-align: center;
+      padding: 40px;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      margin-bottom: 30px;
+    }
+
+    .start-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+    }
+
+    .start-screen p {
+      font-family: 'Rajdhani', sans-serif;
+      color: #b2f5ea;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .quiz-screen {
+      display: none;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-family: 'Fira Code', monospace;
+      color: var(--neon-green);
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .options-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .option {
+      background: rgba(10, 14, 26, 0.8);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      border-radius: 5px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option:hover {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+      transform: translateX(5px);
+    }
+
+    .option.selected {
+      border-color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+    }
+
+    .option.correct {
+      border-color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.15);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .option.incorrect {
+      border-color: var(--neon-pink);
+      background: rgba(255, 0, 230, 0.1);
+      box-shadow: 0 0 20px rgba(255, 0, 230, 0.2);
+    }
+
+    .option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .option-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--neon-blue);
+      border-radius: 50%;
+      margin-right: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .option.selected .option-label::before {
+      border-color: var(--neon-green);
+      background-color: var(--neon-green);
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(5, 8, 17, 0.9);
+      border-left: 3px solid var(--neon-blue);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .quiz-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .results-screen {
+      display: none;
+      text-align: center;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 40px;
+    }
+
+    .results-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+    }
+
+    .score-display {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    .score-correct {
+      color: var(--neon-green);
+    }
+
+    .score-incorrect {
+      color: var(--neon-pink);
+    }
+
+    .feedback-container {
+      text-align: left;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .feedback-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(10, 14, 26, 0.8);
+      border-radius: 5px;
+    }
+
+    .feedback-question {
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--neon-blue);
+    }
+
+    .feedback-answer {
+      margin-bottom: 10px;
+    }
+
+    .feedback-correct {
+      color: var(--neon-green);
+    }
+
+    .feedback-incorrect {
+      color: var(--neon-pink);
+    }
+
+    .feedback-explanation {
+      color: #b2f5ea;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Certificate Screen */
+    .certificate-screen {
+      display: none;
+      text-align: center;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+
+    .certificate-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+    }
+
+    .certificate-screen p {
+      font-family: 'Rajdhani', sans-serif;
+      color: #b2f5ea;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .certificate-preview {
+      background: white;
+      padding: 30px;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+      color: #333;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .certificate-preview::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+    }
+
+    .certificate-header {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--darker-bg);
+      position: relative;
+    }
+
+    .certificate-header::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      margin: 10px auto;
+    }
+
+    .certificate-body {
+      font-family: 'Rajdhani', sans-serif;
+      margin-bottom: 30px;
+    }
+
+    .certificate-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 20px 0;
+      color: var(--darker-bg);
+    }
+
+    .certificate-text {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .certificate-score {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin: 20px 0;
+    }
+
+    .certificate-date {
+      font-style: italic;
+      margin-top: 30px;
+    }
+
+    .certificate-signature {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .signature-line {
+      width: 200px;
+      height: 1px;
+      background: #333;
+      margin: 0 auto 5px;
+    }
+
+    /* Name Input Form */
+    .name-form {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(10, 14, 26, 0.8);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+    }
+
+    .form-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      color: var(--neon-blue);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(5, 8, 17, 0.7);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      color: white;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+    }
+
+    /* Results Buttons */
+    .results-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 480px) {
+      .results-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+    
+      .results-buttons .btn-quiz {
+        width: 100%;
+      }
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-quiz {
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.4),
+                  inset 0 0 10px rgba(0, 242, 255, 0.2);
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn-quiz:hover {
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.6),
+                  inset 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .btn-quiz::before {
+      content: '>';
+      margin-right: 8px;
+      color: var(--neon-green);
+    }
+
+    .btn-quiz:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-custom {
+      background: rgba(5, 8, 17, 0.9);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+      color: white;
+    }
+
+    .modal-custom .modal-header {
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    .modal-custom .modal-title {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+    }
+
+    .modal-custom .btn-close {
+      filter: invert(1);
+    }
+
+    /* Add this to your <style> section */
+.modal-backdrop {
+  display: none !important;
+}
+
+body.modal-open {
+  overflow: auto !important;
+  padding-right: 0 !important;
+}
+
+.modal {
+  position: fixed;
+  z-index: 9999 !important;
+  background-color: rgba(5, 8, 17, 0.95) !important;
+}
+
+    /* ===== MATRIX BACKGROUND ===== */
+    .matrix-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== RESPONSIVE ADJUSTMENTS ===== */
+    @media (max-width: 768px) {
+      .quiz-page-container {
+        padding: 100px 20px 40px;
+      }
+      
+      .quiz-header h1 {
+        font-size: 2rem;
+      }
+      
+      .quiz-header p {
+        font-size: 1rem;
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+      
+      .option-label {
+        font-size: 1rem;
+      }
+      
+      .certificate-header {
+        font-size: 1.8rem;
+      }
+      
+      .certificate-name {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .quiz-meta {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .quiz-navigation {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn-quiz {
+        width: 100%;
+      }
+      
+      .certificate-preview {
+        padding: 15px;
+      }
+      
+      .certificate-header {
+        font-size: 1.5rem;
+      }
+      
+      .certificate-name {
+        font-size: 1.3rem;
+      }
+      
+      .certificate-text {
+        font-size: 1rem;
+      }
+    }
+.certificate-screen {
+      display: none;
+      text-align: center;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 40px 20px;
+      margin-bottom: 30px;
+    }
+
+    .certificate-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+      letter-spacing: 2px;
+      font-size: 1.8rem;
+    }
+
+    .certificate-screen p {
+      font-family: 'Rajdhani', sans-serif;
+      color: #b2f5ea;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .certificate-preview {
+      background: linear-gradient(135deg, #050811 0%, #0a0e1a 100%);
+      padding: 25px;
+      margin: 20px auto;
+      width: 800px;
+      height: 500px; /* Slightly taller to fit content */
+      border-radius: 4px;
+      box-shadow: 0 0 50px rgba(0, 242, 255, 0.2),
+                  0 0 30px rgba(161, 0, 255, 0.2),
+                  inset 0 0 20px rgba(0, 0, 0, 0.5);
+      color: #ffffff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    /* Grid background */
+    .grid-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(to right, rgba(0, 242, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: 1;
+      opacity: 0.5;
+    }
+
+    /* Corner elements */
+    .corner {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      z-index: 5;
+    }
+
+    .corner-tl {
+      top: 10px;
+      left: 10px;
+      border-top: 2px solid var(--neon-blue);
+      border-left: 2px solid var(--neon-blue);
+    }
+
+    .corner-tr {
+      top: 10px;
+      right: 10px;
+      border-top: 2px solid var(--neon-blue);
+      border-right: 2px solid var(--neon-blue);
+    }
+
+    .corner-bl {
+      bottom: 10px;
+      left: 10px;
+      border-bottom: 2px solid var(--neon-blue);
+      border-left: 2px solid var(--neon-blue);
+    }
+
+    .corner-br {
+      bottom: 10px;
+      right: 10px;
+      border-bottom: 2px solid var(--neon-blue);
+      border-right: 2px solid var(--neon-blue);
+    }
+
+    /* Certificate content */
+    .certificate-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .certificate-header {
+      margin-bottom: 5px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    .header-top {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--neon-green);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .header-main {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--neon-blue);
+      line-height: 1.2;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 242, 255, 0.7);
+      letter-spacing: 2px;
+    }
+
+    .header-bottom {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      color: var(--neon-purple);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .certificate-body {
+      margin: 10px 0;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .presented-to {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--neon-green);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .recipient-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: white;
+      margin: 10px 0;
+      padding: 10px;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+      background: rgba(0, 242, 255, 0.1);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .recipient-name::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.4), transparent);
+      animation: shine 3s infinite;
+    }
+
+    .achievement-desc {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      color: #b2f5ea;
+      line-height: 1.4;
+      max-width: 600px;
+      margin: 0 auto 15px;
+      padding: 0 10px;
+    }
+
+    .certificate-details {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .detail-item {
+      text-align: center;
+      padding: 10px 15px;
+      background: rgba(10, 14, 26, 0.7);
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      border-radius: 4px;
+      min-width: 140px;
+    }
+
+    .detail-label {
+      display: block;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--neon-purple);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .detail-value {
+      display: inline;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .certificate-footer {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    .signatures {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .signature {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .signature-line {
+      width: 130px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      margin: 0 auto 6px;
+      position: relative;
+    }
+
+    .signature-line::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--neon-blue);
+      opacity: 0.3;
+      filter: blur(2px);
+    }
+
+    .signature-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      color: var(--neon-blue);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .signature-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: var(--neon-purple);
+    }
+
+    /* Animated elements */
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--neon-green), transparent);
+      box-shadow: 0 0 8px var(--neon-green);
+      animation: scan 4s linear infinite;
+      z-index: 3;
+      opacity: 0.7;
+    }
+
+    .glow-effect {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.1) 0%, transparent 60%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Animations */
+    @keyframes scan {
+      0% {
+        top: 0;
+      }
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes shine {
+      0% {
+        left: -100%;
+      }
+      20% {
+        left: 100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .certificate-preview {
+        width: 90%;
+        height: auto;
+        min-height: 450px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .certificate-preview {
+        padding: 20px 15px;
+      }
+      
+      .header-main {
+        font-size: 1.4rem;
+      }
+      
+      .recipient-name {
+        font-size: 1.4rem;
+        padding: 8px;
+      }
+      
+      .achievement-desc {
+        font-size: 0.8rem;
+        padding: 0 8px;
+      }
+      
+      .certificate-details {
+        gap: 15px;
+      }
+      
+      .detail-item {
+        min-width: 120px;
+        padding: 8px 12px;
+      }
+      
+      .detail-value {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .certificate-screen {
+        padding: 30px 15px;
+      }
+      
+      .certificate-screen h2 {
+        font-size: 1.5rem;
+      }
+      
+      .certificate-preview {
+        padding: 15px 10px;
+      }
+      
+      .header-main {
+        font-size: 1.2rem;
+      }
+      
+      .recipient-name {
+        font-size: 1.2rem;
+      }
+      
+      .achievement-desc {
+        font-size: 0.75rem;
+      }
+      
+      .certificate-details {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .detail-item {
+        width: 100%;
+        max-width: 180px;
+      }
+      
+      .signatures {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .signature {
+        width: 100%;
+        max-width: 180px;
+      }
+    }
+  /* ===== LOGIN SYSTEM STYLES (injected) ===== */
+
+  /* ===== LOGIN SYSTEM STYLES ===== */
+  .cyber-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 17, 0.95); z-index: 2000; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .cyber-popup-content { background: var(--darker-bg); border: 1px solid var(--neon-blue); box-shadow: 0 0 50px rgba(0, 242, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1); width: 420px; padding: 2.5rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; border-radius: 12px; overflow: hidden; }
+  .cyber-popup h2 { color: var(--neon-green); font-family: 'Orbitron', sans-serif; margin-bottom: 2rem; font-size: 1.8rem; letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-green); }
+  .cyber-popup input { width: 100%; padding: 14px 16px; margin-bottom: 1.2rem; background: rgba(0, 242, 255, 0.08); border: 1px solid var(--neon-blue); color: white; font-family: 'Fira Code', monospace; font-size: 0.95rem; border-radius: 6px; transition: all 0.3s; }
+  .cyber-popup input:focus { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); background: rgba(0, 255, 136, 0.1); outline: none; }
+  .close-btn { position: absolute; top: 15px; right: 20px; color: var(--neon-pink); font-size: 1.8rem; cursor: pointer; transition: all 0.3s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+  .close-btn:hover { transform: rotate(90deg); text-shadow: 0 0 15px var(--neon-pink); background: rgba(255, 0, 230, 0.1); }
+  .user-display { display: flex; align-items: center; margin-left: 20px; position: relative; padding: 8px 15px; border-radius: 30px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); transition: all 0.3s; }
+  .user-display:hover { background: rgba(0, 242, 255, 0.2); box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); }
+  .username-display { color: var(--neon-green); font-family: 'Fira Code', monospace; margin-right: 15px; text-shadow: 0 0 8px var(--neon-green); font-size: 0.95rem; letter-spacing: 1px; position: relative; padding-right: 15px; }
+  .username-display::after { content: '|'; position: absolute; right: 0; color: var(--neon-blue); animation: blink 1s step-end infinite; }
+  .btn-logout { background: transparent; border: none; color: var(--neon-pink); padding: 5px 10px; font-family: 'Fira Code', monospace; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; border-radius: 4px; display: flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+  .btn-logout:hover { color: white; background: rgba(255, 0, 230, 0.2); box-shadow: 0 0 15px var(--neon-pink); }
+  .btn-logout::before { content: '⌫'; margin-right: 5px; font-size: 1.1rem; }
+  .cyber-alert { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; background: var(--darker-bg); border: 1px solid var(--neon-blue); box-shadow: 0 0 40px rgba(0, 242, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1); width: 350px; padding: 2rem; border-radius: 10px; text-align: center; display: none; backdrop-filter: blur(5px); }
+  .cyber-alert.active { display: block; animation: alertFadeIn 0.4s ease-out; }
+  .alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 17, 0.8); z-index: 2999; display: none; }
+  .alert-overlay.active { display: block; }
+  .cyber-alert h3 { color: var(--neon-green); font-family: 'Orbitron', sans-serif; margin-bottom: 1.5rem; font-size: 1.5rem; text-shadow: 0 0 10px var(--neon-green); }
+  .cyber-alert p { color: #b2f5ea; font-family: 'Fira Code', monospace; margin-bottom: 2rem; line-height: 1.6; }
+  .cyber-alert-btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 0.7rem 1.8rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; border-radius: 4px; margin: 0 10px; }
+  .cyber-alert-btn.confirm { border-color: var(--neon-green); color: var(--neon-green); }
+  .cyber-alert-btn.danger { border-color: var(--neon-pink); color: var(--neon-pink); }
+  #login-btn { background: rgba(0, 242, 255, 0.15); border: 1px solid var(--neon-blue); border-radius: 4px; padding: 8px 20px !important; margin-left: 15px; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); position: relative; overflow: hidden; }
+  #login-btn:hover { background: rgba(0, 242, 255, 0.3); box-shadow: 0 0 20px var(--neon-blue); transform: translateY(-2px); }
+  .nav-item.locked .nav-link { color: rgba(255, 255, 255, 0.3) !important; cursor: not-allowed; }
+  .nav-item.locked .nav-link:hover::before { width: 0; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">DSET</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+          <li class="nav-item locked" id="course-nav-item"><a class="nav-link" href="../course.html">Course</a></li>
+          <li class="nav-item"><a class="nav-link" href="../about.html">About Us</a></li>
+          <li class="nav-item" id="quiz-nav-item"><a class="nav-link active" href="../quiz.html">Quiz</a></li>
+          <li class="nav-item locked" id="resources-nav-item"><a class="nav-link" href="../resources.html">Resources</a></li>
+          <li class="nav-item" id="login-nav-item"><a class="nav-link" href="#" id="login-btn">Login</a></li>
+          <li class="nav-item" id="user-nav-item" style="display:none;">
+            <div class="user-display">
+              <span class="username-display" id="username-nav-display"></span>
+              <button id="logout-btn" class="btn-logout">LOGOUT</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="quiz-page-container">
+    <div class="quiz-header">
+      <h1>FINAL CYBER SECURITY CERTIFICATION QUIZ</h1>
+      <p>Test your comprehensive knowledge of cybersecurity concepts including introduction, networking security, attack vectors, defense strategies, and ethical hacking.</p>
+    </div>
+
+    <div class="quiz-meta">
+      <div><span class="quiz-difficulty difficulty-professional">FINAL EXAM</span></div>
+      <div><span class="timer" id="quizTimer">30:00</span></div>
+      <div><span id="questionCounter">Question 1 of 30</span></div>
+    </div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+      <h2>Final Cyber Security Certification Challenge</h2>
+      <p>This comprehensive final quiz contains 30 multiple-choice questions covering all cybersecurity topics we've covered. You'll have 30 minutes to complete it. Score 60% or higher to earn your certificate!</p>
+      <button class="btn-quiz" id="startQuizBtn">BEGIN FINAL QUIZ</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div class="quiz-screen" id="quizScreen">
+      <div class="question-container">
+        <div class="question-number" id="questionNumber">Question 1</div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options-container" id="optionsContainer"></div>
+        <div class="explanation" id="explanation"></div>
+      </div>
+
+      <div class="quiz-navigation">
+        <button class="btn-quiz" id="prevBtn" disabled>PREVIOUS</button>
+        <button class="btn-quiz" id="nextBtn">NEXT</button>
+        <button class="btn-quiz" id="submitQuizBtn" style="display: none;">SUBMIT QUIZ</button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div class="results-screen" id="resultsScreen">
+      <h2>QUIZ RESULTS</h2>
+      <div class="score-display">
+        You scored <span class="score-correct" id="correctScore">0</span> out of <span id="totalQuestions">30</span> correct!
+      </div>
+      <div id="certificateEligibility" style="margin-bottom: 30px; font-size: 1.2rem;"></div>
+      <div class="feedback-container" id="feedbackContainer"></div>
+      <div class="results-buttons" id="resultsButtons">
+        <button class="btn-quiz" id="retakeQuizBtn">RETAKE QUIZ</button>
+        <button class="btn-quiz" id="requestCertBtn" style="display: none;">GET CERTIFICATE</button>
+      </div>
+    </div>
+
+   <div class="certificate-screen" id="certificateScreen" style="display: none;">
+    <h2>YOUR CYBER SECURITY CERTIFICATE</h2>
+    <p>Congratulations on completing the final quiz! Your certificate is ready for download.</p>
+    <!-- Canvas-based certificate preview (generated from cert.png) -->
+    <div style="margin: 10px auto 20px; text-align:center;">
+      <img id="canvasCertPreview" alt="Certificate Preview" style="max-width: 100%; height: auto; display: none; border: 1px solid rgba(0, 242, 255, 0.2); box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);" />
+    </div>
+    
+    <div class="certificate-preview" id="certificatePreview">
+      <!-- Glowing corner elements -->
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+      
+      <!-- Grid background -->
+      <div class="grid-lines"></div>
+      
+      <!-- Certificate content -->
+      <div class="certificate-content">
+        <div class="certificate-header">
+          <div class="header-top">OFFICIAL CERTIFICATION</div>
+          <div class="header-main">CYBER SECURITY<br>PROFICIENCY</div>
+          <div class="header-bottom">DIGITAL SECURITY & ETHICAL TRAINING</div>
+        </div>
+        
+        <div class="certificate-body">
+          <div class="presented-to">THIS CERTIFIES THAT</div>
+          <div class="recipient-name" id="certificateName">[YOUR NAME]</div>
+          <div class="achievement-desc">HAS SUCCESSFULLY DEMONSTRATED EXPERT KNOWLEDGE IN CYBER SECURITY PRINCIPLES AND TECHNIQUES THROUGH COMPLETION OF THE FINAL CERTIFICATION EXAMINATION</div>
+          
+          <div class="certificate-details">
+            <div class="detail-item">
+              <span class="detail-label">SCORE ACHIEVED</span>
+              <span class="detail-value" id="certificateScore">XX</span>%
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">DATE OF ISSUE</span>
+              <span class="detail-value" id="certificateDate">[DATE]</span>
+            </div>
+          </div>
+        </div>
+        
+        
+        </div>
+      </div>
+      
+      <!-- Animated elements -->
+      <div class="scan-line"></div>
+      <div class="glow-effect"></div>
+    </div>
+    
+    <div class="results-buttons" id="downloadButtons" style="display: none;">
+    <button class="btn-quiz" id="downloadCertBtn">DOWNLOAD CERTIFICATE</button>
+    <button class="btn-quiz" id="returnHomeBtn">RETURN TO HOME</button>
+    </div>
+  </div>
+
+
+    <!-- Name Input Modal -->
+    <div class="modal modal-custom" id="nameInputModal" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">CERTIFICATE INFORMATION</h5>
+        <button type="button" class="btn-close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Please enter your full name for your certificate:</p>
+        <input type="text" id="userName" class="form-input" placeholder="Enter your full name">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-quiz" id="generateCertBtn">GENERATE CERTIFICATE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Time's Up Modal -->
+  <div class="modal fade modal-custom" id="timeUpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">TIME'S UP!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Your time has expired. The quiz will be automatically submitted.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-quiz" data-bs-dismiss="modal">VIEW RESULTS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matrix Background -->
+  <div class="matrix-container" id="matrixContainer"></div>
+
+  <!-- Login Popup -->
+  <div id="login-popup" class="cyber-popup">
+    <div class="cyber-popup-content">
+      <span class="close-btn">&times;</span>
+      <h2>ACCESS TERMINAL</h2>
+      <form id="login-form">
+        <input type="text" id="login-id" placeholder="ID (e.g., STU101)" required>
+        <input type="text" id="login-mobile" placeholder="Mobile (e.g., 01712345678)" required>
+        <button type="submit" class="btn-quiz">AUTHENTICATE</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Alert System -->
+  <div class="alert-overlay" id="alert-overlay"></div>
+  <div class="cyber-alert" id="cyber-alert">
+    <h3 id="alert-title">ALERT</h3>
+    <p id="alert-message">Message goes here</p>
+    <div id="alert-buttons">
+      <button class="cyber-alert-btn confirm" id="alert-confirm">Confirm</button>
+      <button class="cyber-alert-btn danger" id="alert-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    // Final Comprehensive Cyber Security Quiz Questions
+    let quizQuestions = [
+      // Cyber Intro Questions (6)
+      {
+        question: "What does the 'CIA triad' in cybersecurity refer to?",
+        options: [
+          "Central Intelligence Agency principles",
+          "Confidentiality, Integrity, Availability",
+          "Cybersecurity Incident Analysis",
+          "Critical Infrastructure Assessment"
+        ],
+        correctAnswer: 1,
+        explanation: "The CIA triad represents Confidentiality, Integrity, and Availability - the three core principles of cybersecurity.",
+        category: "Cyber Intro"
+      },
+      {
+        question: "Which of the following is NOT a common type of cyber threat actor?",
+        options: [
+          "Script kiddies",
+          "Hacktivists",
+          "White hat hackers",
+          "Network administrators"
+        ],
+        correctAnswer: 3,
+        explanation: "Network administrators are IT professionals who manage networks, not threat actors.",
+        category: "Cyber Intro"
+      },
+      {
+        question: "What is the primary purpose of a security policy in an organization?",
+        options: [
+          "To provide technical implementation details",
+          "To define acceptable use of IT resources",
+          "To configure firewall rules",
+          "To monitor network traffic"
+        ],
+        correctAnswer: 1,
+        explanation: "Security policies define the organization's approach to security and acceptable use of resources.",
+        category: "Cyber Intro"
+      },
+      {
+        question: "Which cybersecurity concept involves ensuring that actions can be traced to their source?",
+        options: [
+          "Non-repudiation",
+          "Encryption",
+          "Authentication",
+          "Authorization"
+        ],
+        correctAnswer: 0,
+        explanation: "Non-repudiation ensures that actions can be traced to their source and cannot be denied.",
+        category: "Cyber Intro"
+      },
+      {
+        question: "What is the primary goal of risk management in cybersecurity?",
+        options: [
+          "Eliminate all risks",
+          "Transfer all risks to insurance",
+          "Identify and mitigate risks to acceptable levels",
+          "Ignore risks that are unlikely"
+        ],
+        correctAnswer: 2,
+        explanation: "Risk management aims to identify and mitigate risks to levels acceptable to the organization.",
+        category: "Cyber Intro"
+      },
+      {
+        question: "Which regulation is specifically focused on protecting health information in the US?",
+        options: [
+          "GDPR",
+          "HIPAA",
+          "PCI DSS",
+          "SOX"
+        ],
+        correctAnswer: 1,
+        explanation: "HIPAA (Health Insurance Portability and Accountability Act) protects health information.",
+        category: "Cyber Intro"
+      },
+      
+      // Networking Security Questions (6)
+      {
+        question: "What is the primary purpose of a firewall?",
+        options: [
+          "To prevent viruses",
+          "To monitor and control network traffic",
+          "To encrypt data",
+          "To authenticate users"
+        ],
+        correctAnswer: 1,
+        explanation: "Firewalls monitor and control incoming and outgoing network traffic based on security rules.",
+        category: "Networking Security"
+      },
+      {
+        question: "Which protocol is commonly used to securely access network devices remotely?",
+        options: [
+          "HTTP",
+          "FTP",
+          "SSH",
+          "SMTP"
+        ],
+        correctAnswer: 2,
+        explanation: "SSH (Secure Shell) provides secure remote access to network devices.",
+        category: "Networking Security"
+      },
+      {
+        question: "What is the main vulnerability of WEP wireless encryption?",
+        options: [
+          "Weak initialization vectors",
+          "No authentication",
+          "Short key length",
+          "All of the above"
+        ],
+        correctAnswer: 3,
+        explanation: "WEP has multiple vulnerabilities including weak IVs and short key lengths.",
+        category: "Networking Security"
+      },
+      {
+        question: "Which network device operates at Layer 3 of the OSI model?",
+        options: [
+          "Hub",
+          "Switch",
+          "Router",
+          "Bridge"
+        ],
+        correctAnswer: 2,
+        explanation: "Routers operate at Layer 3 (Network layer) of the OSI model.",
+        category: "Networking Security"
+      },
+      {
+        question: "What is the purpose of VLANs in network security?",
+        options: [
+          "To increase network speed",
+          "To logically segment networks",
+          "To encrypt network traffic",
+          "To authenticate users"
+        ],
+        correctAnswer: 1,
+        explanation: "VLANs logically segment networks to improve security and performance.",
+        category: "Networking Security"
+      },
+      {
+        question: "Which protocol is used to automatically assign IP addresses to network devices?",
+        options: [
+          "DNS",
+          "DHCP",
+          "SNMP",
+          "NTP"
+        ],
+        correctAnswer: 1,
+        explanation: "DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses.",
+        category: "Networking Security"
+      },
+      
+      // Attack Vectors Questions (6)
+      {
+        question: "What is a 'zero-day' vulnerability?",
+        options: [
+          "A vulnerability with no available patch",
+          "A vulnerability that only appears at midnight",
+          "A vulnerability that affects zero systems",
+      "A vulnerability that requires zero technical skill to exploit"
+        ],
+        correctAnswer: 0,
+        explanation: "A zero-day vulnerability is a security flaw that is unknown to the vendor or has no available patch.",
+        category: "Attack Vectors"
+      },
+      {
+        question: "What is the primary purpose of a DDoS attack?",
+        options: [
+          "To steal sensitive data",
+          "To overwhelm a system with traffic and make it unavailable",
+          "To gain administrative access to a server",
+          "To encrypt files for ransom"
+        ],
+        correctAnswer: 1,
+        explanation: "A DDoS attack aims to flood a target with excessive traffic, rendering it unable to respond to legitimate requests.",
+        category: "Attack Vectors"
+      },
+      {
+        question: "Which of these is an example of a social engineering attack?",
+        options: [
+          "Buffer overflow",
+          "Phishing email",
+          "SQL injection",
+          "Cross-site scripting"
+        ],
+        correctAnswer: 1,
+        explanation: "Phishing is a social engineering technique where attackers trick users into revealing sensitive information.",
+        category: "Attack Vectors"
+      },
+      {
+        question: "What does 'MITM' stand for in cybersecurity?",
+        options: [
+          "Malware in the Middle",
+          "Man in the Middle",
+          "Multiple Interface Threat Management",
+          "Malicious Intent Targeting Mechanism"
+        ],
+        correctAnswer: 1,
+        explanation: "A Man-in-the-Middle attack occurs when an attacker secretly intercepts communications between two parties.",
+        category: "Attack Vectors"
+      },
+      {
+        question: "What is the main risk of using outdated software?",
+        options: [
+          "Slower performance",
+          "Higher memory usage",
+          "Known vulnerabilities that lack security patches",
+          "Incompatibility with new file formats"
+        ],
+        correctAnswer: 2,
+        explanation: "Outdated software often contains known vulnerabilities that have been patched in newer versions.",
+        category: "Attack Vectors"
+      },
+      {
+        question: "Which attack involves injecting malicious SQL queries?",
+        options: [
+          "Cross-site scripting (XSS)",
+          "SQL injection",
+          "LDAP injection",
+          "XML injection"
+        ],
+        correctAnswer: 1,
+        explanation: "SQL injection attacks occur when an attacker inserts malicious SQL statements into an input field.",
+        category: "Attack Vectors"
+      },
+      
+      // Defense Strategies Questions (6)
+      {
+        question: "What is the principle of least privilege?",
+        options: [
+          "Granting users only the access they need to perform their jobs",
+          "Requiring multiple forms of authentication",
+          "Encrypting all sensitive data",
+          "Implementing the strongest security measures possible"
+        ],
+        correctAnswer: 0,
+        explanation: "The principle of least privilege means users should have only the minimum access necessary.",
+        category: "Defense Strategies"
+      },
+      {
+        question: "Which security control is considered preventive?",
+        options: [
+          "Firewall",
+          "IDS",
+          "Log monitoring",
+          "Incident response plan"
+        ],
+        correctAnswer: 0,
+        explanation: "A firewall is a preventive control that stops unauthorized access before it occurs.",
+        category: "Defense Strategies"
+      },
+      {
+        question: "What is the purpose of encryption in cybersecurity?",
+        options: [
+          "To prevent all cyber attacks",
+          "To make data unreadable without proper authorization",
+          "To increase network speed",
+          "To authenticate users"
+        ],
+        correctAnswer: 1,
+        explanation: "Encryption transforms data to make it unreadable without the proper decryption key.",
+        category: "Defense Strategies"
+      },
+      {
+        question: "Which of these is an example of multi-factor authentication?",
+        options: [
+          "Password and security question",
+          "Password and fingerprint scan",
+          "Two different passwords",
+          "Username and password"
+        ],
+        correctAnswer: 1,
+        explanation: "MFA requires two or more different authentication factors (something you know and something you are).",
+        category: "Defense Strategies"
+      },
+      {
+        question: "What is the primary purpose of a SIEM system?",
+        options: [
+          "To prevent malware infections",
+          "To aggregate and analyze security event data",
+          "To encrypt network traffic",
+          "To authenticate remote users"
+        ],
+        correctAnswer: 1,
+        explanation: "SIEM systems collect and analyze security event data from multiple sources.",
+        category: "Defense Strategies"
+      },
+      {
+        question: "Which backup strategy involves keeping three copies of data on two different media with one offsite?",
+        options: [
+          "3-2-1 rule",
+          "RAID 5",
+          "Incremental backup",
+          "Differential backup"
+        ],
+        correctAnswer: 0,
+        explanation: "The 3-2-1 backup rule recommends 3 copies, on 2 different media, with 1 offsite.",
+        category: "Defense Strategies"
+      },
+      
+      // Ethical Hacking Questions (6)
+      {
+        question: "What is the first phase of ethical hacking?",
+        options: [
+          "Exploitation",
+          "Reconnaissance",
+          "Reporting",
+          "Maintaining access"
+        ],
+        correctAnswer: 1,
+        explanation: "Reconnaissance is the first phase where information about the target is gathered.",
+        category: "Ethical Hacking"
+      },
+      {
+        question: "Which tool is commonly used for network vulnerability scanning?",
+        options: [
+          "Wireshark",
+          "Nmap",
+          "Metasploit",
+          "John the Ripper"
+        ],
+        correctAnswer: 1,
+        explanation: "Nmap is a popular network scanning tool used to discover hosts and services.",
+        category: "Ethical Hacking"
+      },
+      {
+        question: "What is the primary purpose of penetration testing?",
+        options: [
+          "To exploit systems maliciously",
+          "To identify and fix security vulnerabilities",
+          "To monitor network traffic",
+          "To encrypt sensitive data"
+        ],
+        correctAnswer: 1,
+        explanation: "Penetration testing identifies vulnerabilities so they can be fixed before attackers find them.",
+        category: "Ethical Hacking"
+      },
+      {
+        question: "Which type of hacker is authorized to test systems for vulnerabilities?",
+        options: [
+          "Black hat",
+          "Gray hat",
+          "White hat",
+          "Red hat"
+        ],
+        correctAnswer: 2,
+        explanation: "White hat hackers are ethical hackers authorized to test systems.",
+        category: "Ethical Hacking"
+      },
+      {
+        question: "What is the purpose of a 'bug bounty' program?",
+        options: [
+          "To reward researchers for finding vulnerabilities",
+          "To track insects in data centers",
+          "To fund cybersecurity startups",
+          "To pay hackers for stolen data"
+        ],
+        correctAnswer: 0,
+        explanation: "Bug bounty programs reward security researchers for responsibly disclosing vulnerabilities.",
+        category: "Ethical Hacking"
+      },
+      {
+        question: "Which document defines the scope and rules for a penetration test?",
+        options: [
+          "Non-Disclosure Agreement",
+          "Rules of Engagement",
+          "Service Level Agreement",
+          "Acceptable Use Policy"
+        ],
+        correctAnswer: 1,
+        explanation: "The Rules of Engagement document defines the scope and boundaries of a penetration test.",
+        category: "Ethical Hacking"
+      }
+    ];
+
+    // Build a mixed final exam from all categories so it's not identical to any single module
+    (function prepareFinalExam() {
+      function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+      function buildFinalExamFrom(source) {
+        const byCat = source.reduce((map, q) => {
+          const c = q.category || 'General';
+          if (!map[c]) map[c] = [];
+          map[c].push(q);
+          return map;
+        }, {});
+        const plan = {
+          'Cyber Intro': 6,
+          'Networking Security': 6,
+          'Attack Vectors': 6,
+          'Defense Strategies': 6,
+          'Ethical Hacking': 6
+        };
+        let result = [];
+        Object.keys(plan).forEach(cat => {
+          const pool = (byCat[cat] || []).slice();
+          shuffleArray(pool);
+          const take = Math.min(plan[cat], pool.length);
+          result = result.concat(pool.slice(0, take));
+        });
+        // If we couldn't hit target (e.g., missing categories), fill from leftovers
+        const targetTotal = 30; // keep exam length consistent
+        if (result.length < targetTotal) {
+          const used = new Set(result);
+          const leftovers = source.filter(q => !used.has(q));
+          shuffleArray(leftovers);
+          result = result.concat(leftovers.slice(0, targetTotal - result.length));
+        }
+        return shuffleArray(result);
+      }
+      // Rebuild the questions in a mixed, shuffled order
+      quizQuestions = buildFinalExamFrom(quizQuestions);
+    })();
+
+    let currentQuestionIndex = 0;
+    const optionOrders = [];
+    let userAnswers = Array(quizQuestions.length).fill(null);
+    let quizTimer;
+    let timeLeft = 1800; // 30 minutes in seconds
+    let quizStarted = false;
+    let quizFinished = false;
+    let userName = '';
+    let certificateGenerated = false;
+     let nameInputModalInstance = null;
+
+    // Initialize modals when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize the modal
+      const modalElement = document.getElementById('nameInputModal');
+      nameInputModalInstance = new bootstrap.Modal(modalElement, {
+        backdrop: true,
+        keyboard: true,
+        focus: true
+      });
+
+      // Set up shown event listener
+      modalElement.addEventListener('shown.bs.modal', function() {
+        document.getElementById('userName').focus();
+      });
+    });
+
+      
+      
+    // DOM Elements
+    const startScreen = document.getElementById('startScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultsScreen = document.getElementById('resultsScreen');
+    const certificateScreen = document.getElementById('certificateScreen');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const questionNumber = document.getElementById('questionNumber');
+    const questionCounter = document.getElementById('questionCounter');
+    const quizTimerElement = document.getElementById('quizTimer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitQuizBtn = document.getElementById('submitQuizBtn');
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    const retakeQuizBtn = document.getElementById('retakeQuizBtn');
+    const requestCertBtn = document.getElementById('requestCertBtn');
+    const downloadCertBtn = document.getElementById('downloadCertBtn');
+    const returnHomeBtn = document.getElementById('returnHomeBtn');
+    const generateCertBtn = document.getElementById('generateCertBtn');
+    const correctScore = document.getElementById('correctScore');
+    const totalQuestions = document.getElementById('totalQuestions');
+    const feedbackContainer = document.getElementById('feedbackContainer');
+    const explanation = document.getElementById('explanation');
+    const certificateEligibility = document.getElementById('certificateEligibility');
+    const certificateName = document.getElementById('certificateName');
+    const certificateScore = document.getElementById('certificateScore');
+    const certificateDate = document.getElementById('certificateDate');
+    const certificatePreview = document.getElementById('certificatePreview');
+    const canvasCertPreview = document.getElementById('canvasCertPreview');
+    const timeUpModal = new bootstrap.Modal(document.getElementById('timeUpModal'));
+    const nameInputModal = new bootstrap.Modal(document.getElementById('nameInputModal'));
+
+    // Canvas certificate configuration
+    const CERT_BG_URL = 'cert.png'; // Adjust path if needed
+    const NAME_STYLE = {
+      // Font weight, size, family
+      font: "700 60px 'Georgia Pro', Georgia, serif",
+      color: '#336600',
+      shadowColor: '#336600',
+      shadowBlur: 0,
+      // Relative position (0.0 - 1.0)
+      xPercent: 0.5, // 0 = left, 0.5 = center, 1 = right
+      yPercent: 0.53, // adjust vertical placement
+      // Pixel offsets for fine tuning
+      xOffset: 0,
+      yOffset: 0,
+      textAlign: 'center'
+    };
+    let generatedCertDataUrl = '';
+
+    function drawCertificateCanvas(recipientName, scorePercent) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d');
+
+          // Draw background certificate image
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // Configure text style
+          ctx.font = NAME_STYLE.font;
+          ctx.fillStyle = NAME_STYLE.color;
+          ctx.textAlign = NAME_STYLE.textAlign;
+          ctx.textBaseline = 'middle';
+          if (NAME_STYLE.shadowBlur) {
+            ctx.shadowBlur = NAME_STYLE.shadowBlur;
+            ctx.shadowColor = NAME_STYLE.shadowColor;
+          }
+
+          // Compute placement using percentages and pixel offsets
+          const x = Math.round(canvas.width * (NAME_STYLE.xPercent ?? 0.5)) + (NAME_STYLE.xOffset || 0);
+          const y = Math.round(canvas.height * (NAME_STYLE.yPercent ?? 0.55)) + (NAME_STYLE.yOffset || 0);
+
+          // Render name only
+          const nameToPrint = recipientName.trim();
+          ctx.fillText(nameToPrint, x, y);
+
+          try {
+            generatedCertDataUrl = canvas.toDataURL('image/png');
+            resolve(generatedCertDataUrl);
+          } catch (e) { reject(e); }
+        };
+        img.onerror = reject;
+        img.src = CERT_BG_URL;
+      });
+    }
+
+    // Initialize Matrix Background
+    function createMatrixCanvas() {
+      const canvas = document.createElement('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      matrixContainer.appendChild(canvas);
+      
+      const ctx = canvas.getContext('2d');
+      const fontSize = 18;
+      const drops = [];
+      const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*";
+      
+      // Initialize drops
+      for (let i = 0; i < Math.floor(canvas.width / fontSize); i++) {
+        drops[i] = {
+          y: Math.random() * -canvas.height,
+          speed: 2 + Math.random() * 5,
+          length: 10 + Math.floor(Math.random() * 20),
+          lastChar: 0
+        };
+      }
+      
+      function draw() {
+        // Dark translucent background for trail effect
+        ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.font = `${fontSize}px 'Fira Code', monospace`;
+        
+        for (let i = 0; i < drops.length; i++) {
+          const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+          
+          // Bright head character
+          ctx.fillStyle = '#00ff88';
+          ctx.fillText(text, i * fontSize, drops[i].y);
+          
+          // Dim trail characters
+          ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+          for (let j = 1; j < drops[i].length; j++) {
+            const trailY = drops[i].y - j * fontSize;
+            if (trailY > 0) {
+              const trailChar = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+              ctx.fillText(trailChar, i * fontSize, trailY);
+            }
+          }
+          
+          // Reset drop when it reaches bottom
+          if (drops[i].y > canvas.height) {
+            drops[i].y = Math.random() * -100;
+          }
+          
+          drops[i].y += drops[i].speed;
+        }
+        
+        requestAnimationFrame(draw);
+      }
+      
+      draw();
+    }
+
+    const matrixContainer = document.getElementById("matrixContainer");
+    createMatrixCanvas();
+
+    // Event Listeners
+    startQuizBtn.addEventListener('click', startQuiz);
+    prevBtn.addEventListener('click', showPreviousQuestion);
+    nextBtn.addEventListener('click', showNextQuestion);
+    submitQuizBtn.addEventListener('click', submitQuiz);
+    retakeQuizBtn.addEventListener('click', retakeQuiz);
+    requestCertBtn.addEventListener('click', requestCertificate);
+    downloadCertBtn.addEventListener('click', downloadCertificate);
+    returnHomeBtn.addEventListener('click', returnToHome);
+    generateCertBtn.addEventListener('click', generateCertificate);
+    document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-backdrop')) {
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+  }
+});
+
+    // Functions
+    function startQuiz() {
+      // Gate quiz start to logged-in users
+      if (!(window.appState && appState.currentUser)) {
+        if (typeof showAlert === 'function') {
+          showAlert(
+            "LOGIN REQUIRED",
+            "Please login to start the quiz.",
+            { confirm: true, confirmText: "LOGIN", onConfirm: () => { if (window.elements && elements.loginPopup) elements.loginPopup.style.display = 'block'; } }
+          );
+        } else {
+          alert('Please login to start the quiz.');
+        }
+        return;
+      }
+
+      quizStarted = true;
+      startScreen.style.display = 'none';
+      quizScreen.style.display = 'block';
+      
+      // Start timer
+      startTimer();
+      
+      // Load first question
+      showQuestion(currentQuestionIndex);
+    }
+
+    function startTimer() {
+      updateTimerDisplay();
+      quizTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+          clearInterval(quizTimer);
+          timeUpModal.show();
+          submitQuiz();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      quizTimerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      
+      // Change color when time is running low
+      if (timeLeft <= 60) {
+        quizTimerElement.style.color = 'var(--neon-pink)';
+        quizTimerElement.style.animation = 'blink 1s infinite';
+      }
+    }
+
+    function showQuestion(index) {
+      const question = quizQuestions[index];
+      questionText.textContent = question.question;
+      questionNumber.textContent = `Question ${index + 1}`;
+      questionCounter.textContent = `Question ${index + 1} of ${quizQuestions.length}`;
+      
+      // Clear previous options
+      optionsContainer.innerHTML = '';
+
+      // Generate or reuse a randomized option order for this question index
+      if (!optionOrders[index]) {
+        const order = Array.from({ length: question.options.length }, (_, i) => i);
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [order[i], order[j]] = [order[j], order[i]];
+        }
+        optionOrders[index] = order;
+      }
+      const order = optionOrders[index];
+
+      // Create new options following the randomized order
+      order.forEach((origIdx, displayIdx) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = `option ${userAnswers[index] === origIdx ? 'selected' : ''}`;
+        optionElement.setAttribute('data-orig-index', String(origIdx));
+        optionElement.innerHTML = `
+          <input type="radio" name="option" id="option${origIdx}" value="${origIdx}">
+          <label class="option-label" for="option${origIdx}">${question.options[origIdx]}</label>
+        `;
+        optionElement.addEventListener('click', () => selectOption(origIdx));
+        optionsContainer.appendChild(optionElement);
+      });
+      
+      // Update navigation buttons
+      prevBtn.disabled = index === 0;
+      nextBtn.style.display = index === quizQuestions.length - 1 ? 'none' : 'block';
+      submitQuizBtn.style.display = index === quizQuestions.length - 1 ? 'block' : 'none';
+      
+      // Show explanation if reviewing
+      if (quizFinished) {
+        showExplanation(index);
+      }
+    }
+
+    function selectOption(optionIndex) {
+      // optionIndex corresponds to the ORIGINAL option index (not display position)
+      userAnswers[currentQuestionIndex] = optionIndex;
+
+      // Update UI to reflect the selected original option index
+      const options = document.querySelectorAll('.option');
+      options.forEach((option) => {
+        const orig = parseInt(option.getAttribute('data-orig-index') || '-1', 10);
+        option.classList.toggle('selected', orig === optionIndex);
+      });
+
+      // Enable next button if not reviewing
+      if (!quizFinished) {
+        nextBtn.disabled = false;
+      }
+    }
+
+    function showPreviousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion(currentQuestionIndex);
+      }
+    }
+
+    function showNextQuestion() {
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        currentQuestionIndex++;
+        showQuestion(currentQuestionIndex);
+      }
+    }
+
+    function submitQuiz() {
+      quizFinished = true;
+      clearInterval(quizTimer);
+      quizScreen.style.display = 'none';
+      resultsScreen.style.display = 'block';
+      
+      // Calculate score
+      let correctCount = 0;
+      quizQuestions.forEach((question, index) => {
+        if (userAnswers[index] === question.correctAnswer) {
+          correctCount++;
+        }
+      });
+      
+      const percentageScore = Math.round((correctCount / quizQuestions.length) * 100);
+      
+      correctScore.textContent = correctCount;
+      totalQuestions.textContent = quizQuestions.length;
+      
+      // Check certificate eligibility
+      if (percentageScore >= 60) {
+        try { sessionStorage.setItem('quizCompletedId','5'); localStorage.setItem('quizCompletedId','5'); } catch (e) {}
+        certificateEligibility.innerHTML = `
+        `;
+        requestCertBtn.style.display = 'block';
+      } else {
+        certificateEligibility.innerHTML = 
+        
+        requestCertBtn.style.display = 'none';
+      }
+      
+      // Generate feedback
+      feedbackContainer.innerHTML = '';
+      quizQuestions.forEach((question, index) => {
+        const feedbackItem = document.createElement('div');
+        feedbackItem.className = 'feedback-item';
+        
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.correctAnswer;
+        
+        feedbackItem.innerHTML = `
+          <div class="feedback-question">${index + 1}. ${question.question} <small>(${question.category})</small></div>
+          <div class="feedback-answer">
+            Your answer: <span class="${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}">
+              ${userAnswer !== null ? question.options[userAnswer] : 'No answer provided'}
+            </span>
+          </div>
+          ${!isCorrect ? `
+            <div class="feedback-answer">
+              Correct answer: <span class="feedback-correct">${question.options[question.correctAnswer]}</span>
+            </div>
+          ` : ''}
+          <div class="feedback-explanation">${question.explanation}</div>
+        `;
+        
+        feedbackContainer.appendChild(feedbackItem);
+      });
+    }
+
+    function requestCertificate() {
+  // Completely bypass Bootstrap's modal system
+  const modal = document.getElementById('nameInputModal');
+  
+  // Show the modal manually
+  modal.style.display = 'block';
+  modal.classList.add('show');
+  
+  // Focus the input field
+  document.getElementById('userName').focus();
+  
+  // Handle the generate button click
+  document.getElementById('generateCertBtn').onclick = function() {
+    generateCertificate();
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+  };
+  
+  // Allow closing with the X button
+  modal.querySelector('.btn-close').onclick = function() {
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+  };
+}
+
+    function generateCertificate() {
+      userName = document.getElementById('userName').value.trim();
+      if (!userName) {
+        alert('Please enter your name to generate the certificate');
+        return;
+      }
+
+      // Calculate score
+      let correctCount = 0;
+      quizQuestions.forEach((question, index) => {
+        if (userAnswers[index] === question.correctAnswer) correctCount++;
+      });
+      const percentageScore = Math.round((correctCount / quizQuestions.length) * 100);
+
+      // Generate canvas-based certificate image
+      drawCertificateCanvas(userName, percentageScore)
+        .then((dataUrl) => {
+          // Hide HTML-based certificate layout, show canvas image
+          if (certificatePreview) certificatePreview.style.display = 'none';
+          if (canvasCertPreview) {
+            canvasCertPreview.src = dataUrl;
+            canvasCertPreview.style.display = 'inline-block';
+          }
+
+          // Fill text details for accessibility (not used for image)
+          certificateName.textContent = userName;
+          certificateScore.textContent = percentageScore;
+          const today = new Date();
+          certificateDate.textContent = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+          // Show certificate screen and enable download controls
+          nameInputModal.hide();
+          resultsScreen.style.display = 'none';
+          certificateScreen.style.display = 'block';
+          certificateGenerated = true;
+
+          // Reveal the download buttons group if present
+          const buttonsGroup = document.getElementById('resultsButtons');
+          if (buttonsGroup) buttonsGroup.style.display = 'flex';
+          const downloadButtons = document.getElementById('downloadButtons');
+          if (downloadButtons) downloadButtons.style.display = 'flex';
+          const dlBtn = document.getElementById('downloadCertBtn');
+          if (dlBtn) dlBtn.style.display = 'inline-block';
+        })
+        .catch((err) => {
+          alert('Failed to generate certificate image. Please ensure cert.png is available.');
+          console.error(err);
+        });
+    }
+
+    function downloadCertificate() {
+      if (!certificateGenerated || !generatedCertDataUrl) {
+        alert('Certificate not yet generated');
+        return;
+      }
+      const link = document.createElement('a');
+      link.download = `DSET_Cyber_Security_Certificate_${(userName || 'User').replace(/\s+/g, '_')}.png`;
+      link.href = generatedCertDataUrl;
+      link.click();
+    }
+
+    function returnToHome() {
+      window.location.href = "../index.html";
+    }
+
+    function retakeQuiz() {
+      // Reset quiz state
+      currentQuestionIndex = 0;
+      userAnswers = Array(quizQuestions.length).fill(null);
+      timeLeft = 1800;
+      quizFinished = false;
+      quizStarted = false;
+      certificateGenerated = false;
+      
+      // Reset UI elements
+      resultsScreen.style.display = 'none';
+      certificateScreen.style.display = 'none';
+      startScreen.style.display = 'block';
+      quizTimerElement.style.color = '';
+      quizTimerElement.style.animation = '';
+      quizTimerElement.textContent = '30:00';
+      
+      // Clear any existing timer
+      clearInterval(quizTimer);
+      
+      // Reset all option selections
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.classList.remove('selected', 'correct', 'incorrect');
+      });
+      
+      // Hide any explanations
+      explanation.style.display = 'none';
+    }
+
+    function showExplanation(index) {
+      const question = quizQuestions[index];
+      const userAnswer = userAnswers[index];
+      const isCorrect = userAnswer === question.correctAnswer;
+
+      // Show explanation
+      explanation.textContent = question.explanation;
+      explanation.style.display = 'block';
+
+      // Highlight correct/incorrect answers using original indices
+      const options = document.querySelectorAll('.option');
+      options.forEach((option) => {
+        option.classList.remove('correct', 'incorrect');
+        const orig = parseInt(option.getAttribute('data-orig-index') || '-1', 10);
+        if (orig === question.correctAnswer) {
+          option.classList.add('correct');
+        } else if (orig === userAnswer && !isCorrect) {
+          option.classList.add('incorrect');
+        }
+      });
+    }
+
+    // Window resize handler for matrix background
+    window.addEventListener('resize', () => {
+      matrixContainer.innerHTML = '';
+      createMatrixCanvas();
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // Excel-based login system integration (shared)
+    let userDatabase = [];
+    const appState = { currentUser: null };
+    window.appState = appState;
+
+    const elements = {
+      loginBtn: document.getElementById("login-btn"),
+      logoutBtn: document.getElementById("logout-btn"),
+      loginPopup: document.getElementById("login-popup"),
+      closeBtn: document.querySelector(".close-btn"),
+      loginForm: document.getElementById("login-form"),
+      loginId: document.getElementById("login-id"),
+      loginMobile: document.getElementById("login-mobile"),
+      userNavItem: document.getElementById("user-nav-item"),
+      usernameDisplay: document.getElementById("username-nav-display"),
+      loginNavItem: document.getElementById("login-nav-item"),
+      alertOverlay: document.getElementById("alert-overlay"),
+      cyberAlert: document.getElementById("cyber-alert"),
+      alertTitle: document.getElementById("alert-title"),
+      alertMessage: document.getElementById("alert-message"),
+      alertConfirm: document.getElementById("alert-confirm"),
+      alertCancel: document.getElementById("alert-cancel"),
+      courseNavItem: document.getElementById("course-nav-item"),
+      quizNavItem: document.getElementById("quiz-nav-item"),
+      resourcesNavItem: document.getElementById("resources-nav-item")
+    };
+
+    function showAlert(title, message, options = {}) {
+      elements.alertTitle.textContent = title;
+      elements.alertMessage.textContent = message;
+      if (options.confirm) {
+        elements.alertConfirm.style.display = 'inline-block';
+        elements.alertConfirm.textContent = options.confirmText || 'Confirm';
+        elements.alertConfirm.onclick = () => {
+          hideAlert();
+          if (options.onConfirm) options.onConfirm();
+        };
+      } else {
+        elements.alertConfirm.style.display = 'none';
+      }
+      if (options.cancel) {
+        elements.alertCancel.style.display = 'inline-block';
+        elements.alertCancel.textContent = options.cancelText || 'Cancel';
+        elements.alertCancel.onclick = () => {
+          hideAlert();
+          if (options.onCancel) options.onCancel();
+        };
+      } else {
+        elements.alertCancel.style.display = 'none';
+      }
+      elements.alertOverlay.classList.add('active');
+      elements.cyberAlert.classList.add('active');
+    }
+
+    function hideAlert() {
+      elements.alertOverlay.classList.remove('active');
+      elements.cyberAlert.classList.remove('active');
+    }
+
+    function checkLoggedInUser() {
+      const sessionUser = sessionStorage.getItem('currentUser');
+      if (sessionUser) { try { loginUser(JSON.parse(sessionUser), true); return; } catch(e) { sessionStorage.removeItem('currentUser'); } }
+      const savedUser = localStorage.getItem('loggedInUser');
+      if (savedUser) { try { loginUser(JSON.parse(savedUser), true); } catch(e) { localStorage.removeItem('loggedInUser'); } }
+    }
+
+    function loginUser(user, isAutoLogin = false) {
+      appState.currentUser = user;
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
+      if (elements.userNavItem) elements.userNavItem.style.display = "block";
+      if (elements.loginNavItem) elements.loginNavItem.style.display = "none";
+      if (elements.usernameDisplay) elements.usernameDisplay.textContent = user.Name;
+      if (elements.loginPopup) elements.loginPopup.style.display = "none";
+      [elements.courseNavItem, elements.quizNavItem, elements.resourcesNavItem].forEach(el => { if (el) el.classList.remove('locked'); });
+      if (!isAutoLogin || !sessionStorage.getItem('hasShownWelcome')) {
+        setTimeout(() => showAlert("ACCESS GRANTED", `Welcome back, ${user.Name}!`, { confirm: true }), 800);
+      }
+      sessionStorage.setItem('hasShownWelcome', 'true');
+    }
+
+    function logoutUser() {
+      showAlert(
+        "CONFIRM LOGOUT",
+        "Are you sure you want to log out?",
+        {
+          confirm: true,
+          confirmText: "LOGOUT",
+          onConfirm: () => {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('currentUser');
+            appState.currentUser = null;
+            if (elements.userNavItem) elements.userNavItem.style.display = "none";
+            if (elements.loginNavItem) elements.loginNavItem.style.display = "block";
+            [elements.courseNavItem, elements.quizNavItem, elements.resourcesNavItem].forEach(el => { if (el) el.classList.add('locked'); });
+            window.location.href = '../index.html';
+          },
+          cancel: true
+        }
+      );
+    }
+
+    async function loadUsersFromExcel() {
+      try {
+        const response = await fetch('../users.xlsx');
+        if (!response.ok) throw new Error(`Failed to fetch Excel file: HTTP ${response.status}`);
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const excelData = XLSX.utils.sheet_to_json(worksheet);
+        userDatabase = excelData.map(row => ({
+          ID: String(row.ID || '').trim(),
+          Name: String(row.Name || '').trim(),
+          Mobile: String(row.Mobile || '').trim(),
+          Role: String(row.Role || 'student').trim()
+        })).filter(user => user.ID && user.Name && user.Mobile);
+      } catch (error) {
+        console.error('Error loading Excel:', error);
+        userDatabase = [
+          { ID: "STU101", Name: "Test Student", Mobile: "01712345678", Role: "student" },
+          { ID: "TEACH202", Name: "Test Teacher", Mobile: "01876543210", Role: "teacher" }
+        ];
+        const persistedUser = sessionStorage.getItem('currentUser') || localStorage.getItem('loggedInUser');
+        if (!persistedUser) {
+          showAlert("NOTE", "Using test data - Login with ID: STU101, Mobile: 01712345678", { confirm: true });
+        }
+      }
+    }
+
+    function normalizeMobile(mobile) {
+      let digits = mobile.replace(/\D/g, '');
+      if (digits.startsWith('880')) digits = digits.substring(3);
+      else if (digits.startsWith('+880')) digits = digits.substring(4);
+      if (digits.length !== 11) throw new Error('Mobile must be exactly 11 digits');
+      return digits;
+    }
+
+    function validateUser(id, mobile) {
+      try {
+        const normalizedMobile = normalizeMobile(mobile);
+        const user = userDatabase.find(u => u.ID === id.trim() && normalizeMobile(u.Mobile) === normalizedMobile);
+        if (!user) throw new Error('No matching user found');
+        return user;
+      } catch (error) {
+        console.error('Validation error:', error);
+        return null;
+      }
+    }
+
+    function setupLoginEventListeners() {
+      if (elements.loginBtn) elements.loginBtn.addEventListener("click", () => { elements.loginPopup.style.display = "block"; elements.loginId && elements.loginId.focus(); });
+      if (elements.closeBtn) elements.closeBtn.addEventListener("click", () => { elements.loginPopup.style.display = "none"; });
+      if (elements.loginMobile) elements.loginMobile.addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+      if (elements.loginForm) elements.loginForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const id = elements.loginId.value;
+        const mobile = elements.loginMobile.value;
+        if (!id || !mobile) { showAlert("ERROR", "Both ID and Mobile are required", { confirm: true }); return; }
+        const user = validateUser(id, mobile);
+        if (user) { loginUser(user); } else { showAlert("ACCESS DENIED", "Invalid ID or Mobile. Must be exact 11-digit number.", { confirm: true }); }
+      });
+      if (elements.logoutBtn) elements.logoutBtn.addEventListener("click", logoutUser);
+
+      document.querySelectorAll('.nav-item.locked .nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (!appState.currentUser) {
+            e.preventDefault();
+            showAlert(
+              "LOGIN REQUIRED",
+              "Please login to access this section.",
+              { confirm: true, confirmText: "LOGIN", onConfirm: () => { elements.loginPopup.style.display = "block"; } }
+            );
+          }
+        });
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === elements.loginPopup) elements.loginPopup.style.display = "none";
+        if (e.target === elements.alertOverlay) hideAlert();
+      });
+    }
+
+    (async function initializeLogin() {
+      try {
+        await loadUsersFromExcel();
+        setupLoginEventListeners();
+        checkLoggedInUser();
+        window.addEventListener('beforeunload', () => {
+          if (!sessionStorage.getItem('currentUser')) {
+            sessionStorage.removeItem('hasShownWelcome');
+          }
+        });
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showAlert("INIT ERROR", "Failed to initialize login: " + error.message, { confirm: true, confirmText: "RELOAD", onConfirm: () => window.location.reload() });
+      }
+    })();
+  </script>
+</body>
+</html>

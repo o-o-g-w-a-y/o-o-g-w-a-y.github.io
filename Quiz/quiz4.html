@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSET | Cybersecurity in Action Quiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    /* [PASTE ALL THE SAME CSS STYLES FROM YOUR ORIGINAL QUIZ HERE] */
+    :root {
+      --neon-blue: #00f2ff;
+      --neon-purple: #a100ff;
+      --neon-pink: #ff00e6;
+      --neon-green: #00ff88;
+      --dark-bg: #0a0e1a;
+      --darker-bg: #050811;
+      --glow-intensity: 0 0 15px;
+      --terminal-cursor: #00ff41;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #ffffff;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar-custom {
+      background: rgba(10, 14, 26, 0.95) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+      padding: 0.8rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 2.4rem !important;
+      font-weight: 900 !important;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: var(--glow-intensity) rgba(161, 0, 255, 0.7);
+      letter-spacing: 3px;
+      position: relative;
+      padding-right: 20px;
+      margin-right: 1rem;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    .navbar-brand:hover {
+      text-shadow: 0 0 25px var(--neon-purple), 
+                   0 0 20px var(--neon-blue),
+                   0 0 35px rgba(161, 0, 255, 0.5);
+      transform: scale(1.05) !important;
+    }
+
+    .navbar-brand::after {
+      content: '_';
+      position: absolute;
+      right: 0;
+      animation: blink 1s step-end infinite;
+      color: var(--terminal-cursor);
+      font-weight: 400;
+    }
+
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700 !important;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: white !important;
+      margin: 0 12px;
+      position: relative;
+      padding: 8px 0 !important;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      transition: width 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--neon-blue) !important;
+      text-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+    }
+
+    .nav-link:hover::before {
+      width: 100%;
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .nav-link.active {
+      color: var(--neon-green) !important;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+    }
+
+    .nav-link.active::before {
+      width: 100%;
+      background: var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    .navbar-toggler {
+      border: 1px solid var(--neon-blue);
+      padding: 0.5rem;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0, 242, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    /* ===== QUIZ PAGE STYLES ===== */
+    .quiz-page-container {
+      padding-top: 120px;
+      padding-bottom: 50px;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      background: rgba(5, 8, 17, 0.7);
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .quiz-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+      text-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
+      letter-spacing: 2px;
+    }
+
+    .quiz-header p {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      color: #b2f5ea;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      color: var(--neon-green);
+      margin: 20px 0;
+      padding: 10px 15px;
+      background: rgba(5, 8, 17, 0.8);
+      border-radius: 5px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+    }
+
+    .timer {
+      color: var(--neon-pink);
+      font-weight: bold;
+    }
+
+    .start-screen {
+      text-align: center;
+      padding: 40px;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      margin-bottom: 30px;
+    }
+
+    .start-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+    }
+
+    .start-screen p {
+      font-family: 'Rajdhani', sans-serif;
+      color: #b2f5ea;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .quiz-screen {
+      display: none;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-family: 'Fira Code', monospace;
+      color: var(--neon-green);
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .options-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .option {
+      background: rgba(10, 14, 26, 0.8);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      border-radius: 5px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option:hover {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+      transform: translateX(5px);
+    }
+
+    .option.selected {
+      border-color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+    }
+
+    .option.correct {
+      border-color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.15);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .option.incorrect {
+      border-color: var(--neon-pink);
+      background: rgba(255, 0, 230, 0.1);
+      box-shadow: 0 0 20px rgba(255, 0, 230, 0.2);
+    }
+
+    .option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .option-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--neon-blue);
+      border-radius: 50%;
+      margin-right: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .option.selected .option-label::before {
+      border-color: var(--neon-green);
+      background-color: var(--neon-green);
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(5, 8, 17, 0.9);
+      border-left: 3px solid var(--neon-blue);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .quiz-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .results-screen {
+      display: none;
+      text-align: center;
+      background: rgba(5, 8, 17, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      padding: 40px;
+    }
+
+    .results-screen h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 20px;
+    }
+
+    .score-display {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    .score-correct {
+      color: var(--neon-green);
+    }
+
+    .score-incorrect {
+      color: var(--neon-pink);
+    }
+
+    .feedback-container {
+      text-align: left;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .feedback-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(10, 14, 26, 0.8);
+      border-radius: 5px;
+    }
+
+    .feedback-question {
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--neon-blue);
+    }
+
+    .feedback-answer {
+      margin-bottom: 10px;
+    }
+
+    .feedback-correct {
+      color: var(--neon-green);
+    }
+
+    .feedback-incorrect {
+      color: var(--neon-pink);
+    }
+
+    .feedback-explanation {
+      color: #b2f5ea;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-quiz {
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.4),
+                  inset 0 0 10px rgba(0, 242, 255, 0.2);
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn-quiz:hover {
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.6),
+                  inset 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .btn-quiz::before {
+      content: '>';
+      margin-right: 8px;
+      color: var(--neon-green);
+    }
+
+    .btn-quiz:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Results navigation buttons */
+.results-navigation {
+  display: flex;
+  justify-content: space-between; /* Pushes buttons to opposite sides */
+  margin-top: 30px;
+  gap: 15px; /* Adds space between buttons */
+}
+
+/* Make middle button centered */
+.results-navigation #retakeQuizBtn {
+  margin: 0 auto;
+}
+
+    /* ===== MODAL ===== */
+    .modal-custom {
+      background: rgba(5, 8, 17, 0.9);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+      color: white;
+    }
+
+    .modal-custom .modal-header {
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+    }
+
+    .modal-custom .modal-title {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+    }
+
+    .modal-custom .btn-close {
+      filter: invert(1);
+    }
+
+    /* ===== MATRIX BACKGROUND ===== */
+    .matrix-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== RESPONSIVE ADJUSTMENTS ===== */
+    @media (max-width: 768px) {
+      .quiz-page-container {
+        padding: 100px 20px 40px;
+      }
+      
+      .quiz-header h1 {
+        font-size: 2rem;
+      }
+      
+      .quiz-header p {
+        font-size: 1rem;
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+      
+      .option-label {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .quiz-meta {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .quiz-navigation {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn-quiz {
+        width: 100%;
+      }
+    }
+    /* Additional required styles for login popup, alerts, and nav user UI */
+    .cyber-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+    }
+
+    .cyber-popup-content {
+      background: rgba(5, 8, 17, 0.95);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.35);
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 420px;
+      position: relative;
+      color: #fff;
+    }
+
+    .cyber-popup-content h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .cyber-popup-content input[type="text"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 1rem;
+      background: rgba(10, 14, 26, 0.9);
+      border: 1px solid rgba(0, 242, 255, 0.35);
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Alert system */
+    .alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 1200;
+    }
+
+    .alert-overlay.active { display: block; }
+
+    .cyber-alert {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(5, 8, 17, 0.98);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.35);
+      padding: 1.5rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 520px;
+      color: #fff;
+      display: none;
+      z-index: 1300;
+    }
+
+    .cyber-alert.active { display: block; }
+
+    .cyber-alert h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .cyber-alert p { color: #b2f5ea; margin-bottom: 1rem; }
+
+    #alert-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .cyber-alert-btn {
+      padding: 0.6rem 1.2rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 2px solid var(--neon-blue);
+      background: transparent;
+      color: var(--neon-blue);
+      box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .cyber-alert-btn.confirm {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+
+    .cyber-alert-btn.danger {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+
+    /* Navbar user area */
+    .user-display {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .username-display {
+      font-family: 'Fira Code', monospace;
+      color: var(--neon-green);
+    }
+
+    .btn-logout {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.85rem;
+      background: transparent;
+      color: var(--neon-pink);
+      border: 1px solid var(--neon-pink);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+
+    /* Locked nav items appear disabled */
+    .nav-item.locked .nav-link {
+      opacity: 0.6;
+      pointer-events: auto; /* allow JS to intercept click */
+      position: relative;
+    }
+
+    .nav-item.locked .nav-link::after {
+      content: ' \1F512'; /* lock emoji */
+      margin-left: 6px;
+      color: var(--neon-pink);
+      font-size: 0.95em;
+    }
+
+    /* Difficulty badge */
+    .quiz-difficulty {
+      padding: 4px 10px;
+      border: 1px solid var(--neon-blue);
+      color: var(--neon-blue);
+      font-family: 'Fira Code', monospace;
+      border-radius: 4px;
+    }
+
+    .difficulty-expert {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+    /* End of additions */
+  </style>
+  <style>
+  /* ===== LOGIN SYSTEM STYLES ===== */
+  .cyber-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 17, 0.95); z-index: 2000; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .cyber-popup-content { background: var(--darker-bg); border: 1px solid var(--neon-blue); box-shadow: 0 0 50px rgba(0, 242, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1); width: 420px; padding: 2.5rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; border-radius: 12px; overflow: hidden; }
+  .cyber-popup h2 { color: var(--neon-green); font-family: 'Orbitron', sans-serif; margin-bottom: 2rem; font-size: 1.8rem; letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-green); }
+  .cyber-popup input { width: 100%; padding: 14px 16px; margin-bottom: 1.2rem; background: rgba(0, 242, 255, 0.08); border: 1px solid var(--neon-blue); color: white; font-family: 'Fira Code', monospace; font-size: 0.95rem; border-radius: 6px; transition: all 0.3s; }
+  .cyber-popup input:focus { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); background: rgba(0, 255, 136, 0.1); outline: none; }
+  .close-btn { position: absolute; top: 15px; right: 20px; color: var(--neon-pink); font-size: 1.8rem; cursor: pointer; transition: all 0.3s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+  .close-btn:hover { transform: rotate(90deg); text-shadow: 0 0 15px var(--neon-pink); background: rgba(255, 0, 230, 0.1); }
+  .user-display { display: flex; align-items: center; margin-left: 20px; position: relative; padding: 8px 15px; border-radius: 30px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); transition: all 0.3s; }
+  .user-display:hover { background: rgba(0, 242, 255, 0.2); box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); }
+  .username-display { color: var(--neon-green); font-family: 'Fira Code', monospace; margin-right: 15px; text-shadow: 0 0 8px var(--neon-green); font-size: 0.95rem; letter-spacing: 1px; position: relative; padding-right: 15px; }
+  .username-display::after { content: '|'; position: absolute; right: 0; color: var(--neon-blue); animation: blink 1s step-end infinite; }
+  .btn-logout { background: transparent; border: none; color: var(--neon-pink); padding: 5px 10px; font-family: 'Fira Code', monospace; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; border-radius: 4px; display: flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+  .btn-logout:hover { color: white; background: rgba(255, 0, 230, 0.2); box-shadow: 0 0 15px var(--neon-pink); }
+  .btn-logout::before { content: '⌫'; margin-right: 5px; font-size: 1.1rem; }
+  .cyber-alert { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; background: var(--darker-bg); border: 1px solid var(--neon-blue); box-shadow: 0 0 40px rgba(0, 242, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1); width: 350px; padding: 2rem; border-radius: 10px; text-align: center; display: none; backdrop-filter: blur(5px); }
+  .cyber-alert.active { display: block; animation: alertFadeIn 0.4s ease-out; }
+  .alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 17, 0.8); z-index: 2999; display: none; }
+  .alert-overlay.active { display: block; }
+  .cyber-alert h3 { color: var(--neon-green); font-family: 'Orbitron', sans-serif; margin-bottom: 1.5rem; font-size: 1.5rem; text-shadow: 0 0 10px var(--neon-green); }
+  .cyber-alert p { color: #b2f5ea; font-family: 'Fira Code', monospace; margin-bottom: 2rem; line-height: 1.6; }
+  .cyber-alert-btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 0.7rem 1.8rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; border-radius: 4px; margin: 0 10px; }
+  .cyber-alert-btn.confirm { border-color: var(--neon-green); color: var(--neon-green); }
+  .cyber-alert-btn.danger { border-color: var(--neon-pink); color: var(--neon-pink); }
+  #login-btn { background: rgba(0, 242, 255, 0.15); border: 1px solid var(--neon-blue); border-radius: 4px; padding: 8px 20px !important; margin-left: 15px; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); position: relative; overflow: hidden; }
+  #login-btn:hover { background: rgba(0, 242, 255, 0.3); box-shadow: 0 0 20px var(--neon-blue); transform: translateY(-2px); }
+  .nav-item.locked .nav-link { color: rgba(255, 255, 255, 0.3) !important; cursor: not-allowed; }
+  .nav-item.locked .nav-link:hover::before { width: 0; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../index.html">DSET</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="../about.html">About Us</a></li>
+          <li class="nav-item locked" id="course-nav-item"><a class="nav-link" href="../course.html">Course</a></li>
+          <li class="nav-item" id="quiz-nav-item"><a class="nav-link active" href="../quiz.html">Quiz</a></li>
+          <li class="nav-item locked" id="resources-nav-item"><a class="nav-link" href="../resources.html">Resources</a></li>
+          <li class="nav-item" id="login-nav-item"><a class="nav-link" href="#" id="login-btn">Login</a></li>
+          <li class="nav-item" id="user-nav-item" style="display:none;">
+            <div class="user-display">
+              <span class="username-display" id="username-nav-display"></span>
+              <button id="logout-btn" class="btn-logout">LOGOUT</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="quiz-page-container">
+    <div class="quiz-header">
+      <h1>MODULE 4: CYBERSECURITY IN ACTION</h1>
+      <p>Real incidents and human factors: single-click losses, ransomware cases, insider threats, social media pitfalls, company-changing attacks, hacker mindset, everyday heroes, and career paths.</p>
+    </div>
+
+    <div class="quiz-meta">
+      <div><span class="quiz-difficulty difficulty-intermediate">ADVANCED LEVEL</span></div>
+      <div><span class="timer" id="quizTimer">10:00</span></div>
+      <div><span id="questionCounter">Question 1 of 10</span></div>
+    </div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+      <h2>Ready to Apply What You Learned?</h2>
+      <p>This quiz contains 10 multiple-choice questions based on Module 4 case studies and concepts. You’ll have 10 minutes to complete it.</p>
+      <button class="btn-quiz" id="startQuizBtn">BEGIN QUIZ</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div class="quiz-screen" id="quizScreen">
+      <div class="question-container">
+        <div class="question-number" id="questionNumber">Question 1</div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options-container" id="optionsContainer"></div>
+        <div class="explanation" id="explanation"></div>
+      </div>
+
+      <div class="quiz-navigation">
+        <button class="btn-quiz" id="prevBtn" disabled>PREVIOUS</button>
+        <button class="btn-quiz" id="nextBtn">NEXT</button>
+        <button class="btn-quiz" id="submitQuizBtn" style="display: none;">SUBMIT QUIZ</button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <!-- Results Screen -->
+<div class="results-screen" id="resultsScreen">
+  <h2>QUIZ RESULTS</h2>
+  <div class="score-display">
+    You scored <span class="score-correct" id="correctScore">0</span> out of <span id="totalQuestions">10</span> correct!
+  </div>
+  <div class="feedback-container" id="feedbackContainer"></div>
+  
+  <!-- Navigation Buttons -->
+  <div class="results-navigation">
+    <button class="btn-quiz" id="previousQuizBtn">PREVIOUS QUIZ</button>
+    <button class="btn-quiz" id="retakeQuizBtn">RETAKE QUIZ</button>
+    <button class="btn-quiz" id="nextQuizBtn">NEXT QUIZ</button>
+  </div>
+</div>
+
+  <!-- Time's Up Modal -->
+  <div class="modal fade modal-custom" id="timeUpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">TIME'S UP!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Your time has expired. The quiz will be automatically submitted.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-quiz" data-bs-dismiss="modal">VIEW RESULTS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matrix Background -->
+  <div class="matrix-container" id="matrixContainer"></div>
+
+  <!-- Login Popup -->
+  <div id="login-popup" class="cyber-popup">
+    <div class="cyber-popup-content">
+      <span class="close-btn">&times;</span>
+      <h2>ACCESS TERMINAL</h2>
+      <form id="login-form">
+        <input type="text" id="login-id" placeholder="ID (e.g., STU101)" required>
+        <input type="text" id="login-mobile" placeholder="Mobile (e.g., 01712345678)" required>
+        <button type="submit" class="btn-quiz">AUTHENTICATE</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Alert System -->
+  <div class="alert-overlay" id="alert-overlay"></div>
+  <div class="cyber-alert" id="cyber-alert">
+    <h3 id="alert-title">ALERT</h3>
+    <p id="alert-message">Message goes here</p>
+    <div id="alert-buttons">
+      <button class="cyber-alert-btn confirm" id="alert-confirm">Confirm</button>
+      <button class="cyber-alert-btn danger" id="alert-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Defense Strategies Quiz Questions
+const quizQuestions = [
+  {
+    question: "Why are insider threats considered highly dangerous?",
+    options: [
+      "They often have valid credentials and understand internal systems",
+      "They are always external hackers pretending to be employees",
+      "They only affect small companies with fewer security tools",
+      "They can only operate by physically stealing hardware"
+    ],
+    correctAnswer: 0,
+    explanation: "Insiders already have legitimate access, making their actions harder to detect and stop quickly."
+  },
+  {
+    question: "What key lesson came from the WannaCry ransomware case?",
+    options: [
+      "Strong passwords alone can stop ransomware",
+      "Regular system updates can close vulnerabilities before attackers exploit them",
+      "Antivirus tools make updates unnecessary",
+      "Ransomware only spreads through USB drives"
+    ],
+    correctAnswer: 1,
+    explanation: "WannaCry spread rapidly because of unpatched systems, showing why updates are critical for defense."
+  },
+  {
+    question: "Which action best helps reduce social media risks?",
+    options: [
+      "Oversharing information like email, location, or work details",
+      "Using strict privacy settings and limiting sensitive posts",
+      "Connecting with everyone who sends a friend request",
+      "Keeping accounts permanently public for transparency"
+    ],
+    correctAnswer: 1,
+    explanation: "Limiting what you share and controlling visibility helps prevent data leaks or targeted attacks."
+  },
+  {
+    question: "Why was the Colonial Pipeline ransomware attack so impactful?",
+    options: [
+      "It caused minor internal server slowdowns",
+      "It disrupted the distribution of essential fuel supplies to large regions",
+      "It only affected a single employee's computer",
+      "It permanently disabled global banking systems"
+    ],
+    correctAnswer: 1,
+    explanation: "The attack shut down critical fuel pipelines, leading to widespread disruption."
+  },
+  {
+    question: "How does a hacker’s mindset benefit cybersecurity defenders?",
+    options: [
+      "It encourages defenders to think like attackers and identify weaknesses first",
+      "It focuses only on breaking encryption keys",
+      "It replaces the need for technical controls",
+      "It guarantees complete prevention of all cyberattacks"
+    ],
+    correctAnswer: 0,
+    explanation: "By understanding how attackers plan and act, defenders can design stronger, proactive defenses."
+  },
+  {
+    question: "What does the 'human firewall' concept emphasize?",
+    options: [
+      "People can stop attacks by recognizing and reporting threats like phishing",
+      "Humans should replace all automated cybersecurity systems",
+      "Devices alone are responsible for preventing breaches",
+      "It refers to a specific type of physical firewall hardware"
+    ],
+    correctAnswer: 0,
+    explanation: "Awareness and training empower people to act as the first line of defense against attacks."
+  },
+  {
+    question: "Which is a safe first step for someone starting a cybersecurity career?",
+    options: [
+      "Building strong fundamentals and practicing in safe, legal labs",
+      "Testing live company networks without permission to gain real experience",
+      "Skipping networking and operating system basics to save time",
+      "Copying hacking techniques from movies or TV shows"
+    ],
+    correctAnswer: 0,
+    explanation: "Learning core concepts and practicing ethically in controlled environments lays a solid foundation."
+  },
+  {
+    question: "Which behavior shows strong physical security awareness?",
+    options: [
+      "Leaving devices unattended in public spaces",
+      "Challenging tailgaters and verifying IDs or badges",
+      "Sharing access cards with trusted friends",
+      "Allowing visitors to bypass physical security checks"
+    ],
+    correctAnswer: 1,
+    explanation: "Verifying IDs and stopping tailgating helps prevent unauthorized physical access to secure areas."
+  },
+  {
+    question: "Why is security awareness training important for organizations?",
+    options: [
+      "It reduces risky behaviors like clicking on phishing links",
+      "It eliminates the need for firewalls and antivirus tools",
+      "It guarantees zero cyberattacks",
+      "It focuses only on physical device protection"
+    ],
+    correctAnswer: 0,
+    explanation: "Educated users are less likely to fall for attacks, reducing incidents and overall risk."
+  },
+  {
+    question: "Which real-world breach forced companies to improve their policies and security practices?",
+    options: [
+      "A routine system maintenance update",
+      "The Target, Equifax, or Sony data breaches",
+      "A temporary internet outage",
+      "An employee forgetting their password"
+    ],
+    correctAnswer: 1,
+    explanation: "These major breaches had lasting impacts, prompting stronger security standards and reforms."
+  }
+];
+
+
+    // [PASTE THE ENTIRE JAVASCRIPT SECTION FROM YOUR ORIGINAL QUIZ HERE]
+    // This includes all the timer, navigation, and display functions
+    // Just change the initial timeLeft value to 900 (15 minutes in seconds)
+    let currentQuestionIndex = 0;
+    let userAnswers = Array(quizQuestions.length).fill(null);
+    let quizTimer;
+    let timeLeft = 600; // 10 minutes in seconds
+    let quizStarted = false;
+
+    // DOM Elements
+    const startScreen = document.getElementById('startScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultsScreen = document.getElementById('resultsScreen');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const questionNumber = document.getElementById('questionNumber');
+    const questionCounter = document.getElementById('questionCounter');
+    const quizTimerElement = document.getElementById('quizTimer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitQuizBtn = document.getElementById('submitQuizBtn');
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    const retakeQuizBtn = document.getElementById('retakeQuizBtn');
+    const correctScore = document.getElementById('correctScore');
+    const totalQuestions = document.getElementById('totalQuestions');
+    const feedbackContainer = document.getElementById('feedbackContainer');
+    const explanation = document.getElementById('explanation');
+    const timeUpModal = new bootstrap.Modal(document.getElementById('timeUpModal'));
+
+    // Persist progress immediately when a quiz is completed or when navigating to the next quiz
+    function updateProgressAfterQuizCompletion(completedId) {
+      try {
+        const user = window.appState && appState.currentUser;
+        const key = user && user.ID ? `quizProgress:v1:${user.ID}` : null;
+        if (key) {
+          let progress = { maxUnlocked: 1, completed: {}, current: 1 };
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            try {
+              const parsed = JSON.parse(raw);
+              if (parsed && typeof parsed === 'object') progress = Object.assign(progress, parsed);
+            } catch (e) {}
+          }
+          if (!progress.completed) progress.completed = {};
+          progress.completed[completedId] = true;
+          const totalQuizzes = 5;
+          const nextId = Math.min(completedId + 1, totalQuizzes);
+          progress.maxUnlocked = Math.max(progress.maxUnlocked || 1, nextId);
+          progress.current = nextId;
+          localStorage.setItem(key, JSON.stringify(progress));
+        }
+        // Compatibility marker for quiz selection page on refresh
+        sessionStorage.setItem('quizCompletedId', String(completedId));
+        localStorage.setItem('quizCompletedId', String(completedId));
+      } catch (e) {}
+    }
+
+    // Initialize Matrix Background
+    function createMatrixCanvas() {
+      const canvas = document.createElement('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      matrixContainer.appendChild(canvas);
+      
+      const ctx = canvas.getContext('2d');
+      const fontSize = 18;
+      const drops = [];
+      
+      // Initialize drops
+      for (let i = 0; i < Math.floor(canvas.width / fontSize); i++) {
+        drops[i] = {
+          y: Math.random() * -canvas.height,
+          speed: 2 + Math.random() * 5,
+          length: 10 + Math.floor(Math.random() * 20),
+          lastChar: 0
+        };
+      }
+      
+      function draw() {
+        // Dark translucent background for trail effect
+        ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.font = `${fontSize}px 'Fira Code', monospace`;
+        
+        for (let i = 0; i < drops.length; i++) {
+          const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+          
+          // Bright head character
+          ctx.fillStyle = '#00ff88';
+          ctx.fillText(text, i * fontSize, drops[i].y);
+          
+          // Dim trail characters
+          ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+          for (let j = 1; j < drops[i].length; j++) {
+            const trailY = drops[i].y - j * fontSize;
+            if (trailY > 0) {
+              const trailChar = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+              ctx.fillText(trailChar, i * fontSize, trailY);
+            }
+          }
+          
+          // Reset drop when it reaches bottom
+          if (drops[i].y > canvas.height) {
+            drops[i].y = Math.random() * -100;
+          }
+          
+          drops[i].y += drops[i].speed;
+        }
+        
+        requestAnimationFrame(draw);
+      }
+      
+      draw();
+    }
+
+    const matrixContainer = document.getElementById("matrixContainer");
+    const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*";
+    createMatrixCanvas();
+
+    // Event Listeners
+    startQuizBtn.addEventListener('click', startQuiz);
+    prevBtn.addEventListener('click', showPreviousQuestion);
+    nextBtn.addEventListener('click', showNextQuestion);
+    submitQuizBtn.addEventListener('click', submitQuiz);
+    retakeQuizBtn.addEventListener('click', retakeQuiz);
+    // Add these with your other event listeners
+document.getElementById('previousQuizBtn').addEventListener('click', function() {
+  window.location.href = 'quiz3.html';
+});
+document.getElementById('nextQuizBtn').addEventListener('click', function() {
+  updateProgressAfterQuizCompletion(4);
+  window.location.href = 'quiz6.html';
+});
+
+    // Functions
+    function startQuiz() {
+      // Gate quiz start to logged-in users
+      if (!(window.appState && appState.currentUser)) {
+        if (typeof showAlert === 'function') {
+          showAlert(
+            "LOGIN REQUIRED",
+            "Please login to start the quiz.",
+            { confirm: true, confirmText: "LOGIN", onConfirm: () => { if (window.elements && elements.loginPopup) elements.loginPopup.style.display = 'block'; } }
+          );
+        } else {
+          alert('Please login to start the quiz.');
+        }
+        return;
+      }
+
+      quizStarted = true;
+      startScreen.style.display = 'none';
+      quizScreen.style.display = 'block';
+      
+      // Start timer
+      startTimer();
+      
+      // Load first question
+      showQuestion(currentQuestionIndex);
+    }
+
+    function startTimer() {
+      updateTimerDisplay();
+      quizTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+          clearInterval(quizTimer);
+          timeUpModal.show();
+          submitQuiz();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      quizTimerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      
+      // Change color when time is running low
+      if (timeLeft <= 60) {
+        quizTimerElement.style.color = 'var(--neon-pink)';
+        quizTimerElement.style.animation = 'blink 1s infinite';
+      }
+    }
+
+    function showQuestion(index) {
+      const question = quizQuestions[index];
+      questionText.textContent = question.question;
+      questionNumber.textContent = `Question ${index + 1}`;
+      questionCounter.textContent = `Question ${index + 1} of ${quizQuestions.length}`;
+      
+      // Clear previous options
+      optionsContainer.innerHTML = '';
+      
+      // Create new options
+      question.options.forEach((option, i) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = `option ${userAnswers[index] === i ? 'selected' : ''}`;
+        optionElement.innerHTML = `
+          <input type="radio" name="option" id="option${i}" value="${i}">
+          <label class="option-label" for="option${i}">${option}</label>
+        `;
+        
+        optionElement.addEventListener('click', () => selectOption(i));
+        optionsContainer.appendChild(optionElement);
+      });
+      
+      // Update navigation buttons
+      prevBtn.disabled = index === 0;
+      nextBtn.style.display = index === quizQuestions.length - 1 ? 'none' : 'block';
+      submitQuizBtn.style.display = index === quizQuestions.length - 1 ? 'block' : 'none';
+      
+      // Show explanation if reviewing
+      if (quizFinished) {
+        showExplanation(index);
+      }
+    }
+
+    function selectOption(optionIndex) {
+      userAnswers[currentQuestionIndex] = optionIndex;
+      
+      // Update UI
+      const options = document.querySelectorAll('.option');
+      options.forEach((option, i) => {
+        option.classList.toggle('selected', i === optionIndex);
+      });
+      
+      // Enable next button if not reviewing
+      if (!quizFinished) {
+        nextBtn.disabled = false;
+      }
+    }
+
+    function showPreviousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion(currentQuestionIndex);
+      }
+    }
+
+    function showNextQuestion() {
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        currentQuestionIndex++;
+        showQuestion(currentQuestionIndex);
+      }
+    }
+
+    let quizFinished = false;
+
+    function submitQuiz() {
+      quizFinished = true;
+      clearInterval(quizTimer);
+      quizScreen.style.display = 'none';
+      resultsScreen.style.display = 'block';
+      
+      // Mark completion for unlock on selection page
+      updateProgressAfterQuizCompletion(4);
+      
+      // Calculate score
+      let correctCount = 0;
+      quizQuestions.forEach((question, index) => {
+        if (userAnswers[index] === question.correctAnswer) {
+          correctCount++;
+        }
+      });
+      
+      correctScore.textContent = correctCount;
+      totalQuestions.textContent = quizQuestions.length;
+      
+      // Generate feedback
+      feedbackContainer.innerHTML = '';
+      quizQuestions.forEach((question, index) => {
+        const feedbackItem = document.createElement('div');
+        feedbackItem.className = 'feedback-item';
+        
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.correctAnswer;
+        
+        feedbackItem.innerHTML = `
+          <div class="feedback-question">${index + 1}. ${question.question}</div>
+          <div class="feedback-answer">
+            Your answer: <span class="${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}">${
+              userAnswer !== null ? question.options[userAnswer] : 'No answer'
+            }</span>
+          </div>
+          ${!isCorrect ? `
+            <div class="feedback-answer">
+              Correct answer: <span class="feedback-correct">${question.options[question.correctAnswer]}</span>
+            </div>
+          ` : ''}
+          <div class="feedback-explanation">${question.explanation}</div>
+        `;
+        
+        feedbackContainer.appendChild(feedbackItem);
+      });
+    }
+
+    function showExplanation(index) {
+      const question = quizQuestions[index];
+      const userAnswer = userAnswers[index];
+      const isCorrect = userAnswer === question.correctAnswer;
+      
+      // Highlight correct and incorrect answers
+      const options = document.querySelectorAll('.option');
+      options.forEach((option, i) => {
+        option.classList.remove('correct', 'incorrect');
+        
+        if (i === question.correctAnswer) {
+          option.classList.add('correct');
+        } else if (i === userAnswer && !isCorrect) {
+          option.classList.add('incorrect');
+        }
+      });
+      
+      // Show explanation
+      explanation.textContent = question.explanation;
+      explanation.style.display = 'block';
+    }
+
+    function retakeQuiz() {
+      // Reset quiz state
+      currentQuestionIndex = 0;
+      userAnswers = Array(quizQuestions.length).fill(null);
+      timeLeft = 900;
+      quizFinished = false;
+      quizStarted = false;
+      
+      // Reset UI elements
+      resultsScreen.style.display = 'none';
+      startScreen.style.display = 'block';
+      quizTimerElement.style.color = '';
+      quizTimerElement.style.animation = '';
+      quizTimerElement.textContent = '15:00';
+      
+      // Clear any existing timer
+      clearInterval(quizTimer);
+      
+      // Reset all option selections
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.classList.remove('selected', 'correct', 'incorrect');
+      });
+      
+      // Hide any explanations
+      explanation.style.display = 'none';
+    }
+
+    // Clean up on window resize
+    window.addEventListener('resize', function() {
+      matrixContainer.innerHTML = '';
+      createMatrixCanvas();
+    });
+
+    // Highlight active nav item
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+
+    // The rest of your JavaScript code remains the same
+    // It will automatically work with these new questions
+  </script>
+
+  <script>
+    // Excel-based login system integration (shared)
+    let userDatabase = [];
+    const appState = { currentUser: null };
+    window.appState = appState;
+
+    const elements = {
+      loginBtn: document.getElementById("login-btn"),
+      logoutBtn: document.getElementById("logout-btn"),
+      loginPopup: document.getElementById("login-popup"),
+      closeBtn: document.querySelector(".close-btn"),
+      loginForm: document.getElementById("login-form"),
+      loginId: document.getElementById("login-id"),
+      loginMobile: document.getElementById("login-mobile"),
+      userNavItem: document.getElementById("user-nav-item"),
+      usernameDisplay: document.getElementById("username-nav-display"),
+      loginNavItem: document.getElementById("login-nav-item"),
+      alertOverlay: document.getElementById("alert-overlay"),
+      cyberAlert: document.getElementById("cyber-alert"),
+      alertTitle: document.getElementById("alert-title"),
+      alertMessage: document.getElementById("alert-message"),
+      alertConfirm: document.getElementById("alert-confirm"),
+      alertCancel: document.getElementById("alert-cancel"),
+      courseNavItem: document.getElementById("course-nav-item"),
+      quizNavItem: document.getElementById("quiz-nav-item"),
+      resourcesNavItem: document.getElementById("resources-nav-item")
+    };
+
+    function showAlert(title, message, options = {}) {
+      elements.alertTitle.textContent = title;
+      elements.alertMessage.textContent = message;
+      if (options.confirm) {
+        elements.alertConfirm.style.display = 'inline-block';
+        elements.alertConfirm.textContent = options.confirmText || 'Confirm';
+        elements.alertConfirm.onclick = () => {
+          hideAlert();
+          if (options.onConfirm) options.onConfirm();
+        };
+      } else {
+        elements.alertConfirm.style.display = 'none';
+      }
+      if (options.cancel) {
+        elements.alertCancel.style.display = 'inline-block';
+        elements.alertCancel.textContent = options.cancelText || 'Cancel';
+        elements.alertCancel.onclick = () => {
+          hideAlert();
+          if (options.onCancel) options.onCancel();
+        };
+      } else {
+        elements.alertCancel.style.display = 'none';
+      }
+      elements.alertOverlay.classList.add('active');
+      elements.cyberAlert.classList.add('active');
+    }
+
+    function hideAlert() {
+      elements.alertOverlay.classList.remove('active');
+      elements.cyberAlert.classList.remove('active');
+    }
+
+    function checkLoggedInUser() {
+      const sessionUser = sessionStorage.getItem('currentUser');
+      if (sessionUser) { try { loginUser(JSON.parse(sessionUser), true); return; } catch(e) { sessionStorage.removeItem('currentUser'); } }
+      const savedUser = localStorage.getItem('loggedInUser');
+      if (savedUser) { try { loginUser(JSON.parse(savedUser), true); } catch(e) { localStorage.removeItem('loggedInUser'); } }
+    }
+
+    function loginUser(user, isAutoLogin = false) {
+      appState.currentUser = user;
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
+      if (elements.userNavItem) elements.userNavItem.style.display = "block";
+      if (elements.loginNavItem) elements.loginNavItem.style.display = "none";
+      if (elements.usernameDisplay) elements.usernameDisplay.textContent = user.Name;
+      if (elements.loginPopup) elements.loginPopup.style.display = "none";
+      [elements.courseNavItem, elements.quizNavItem, elements.resourcesNavItem].forEach(el => { if (el) el.classList.remove('locked'); });
+      if (!isAutoLogin || !sessionStorage.getItem('hasShownWelcome')) {
+        setTimeout(() => showAlert("ACCESS GRANTED", `Welcome back, ${user.Name}!`, { confirm: true }), 800);
+      }
+      sessionStorage.setItem('hasShownWelcome', 'true');
+    }
+
+    function logoutUser() {
+      showAlert(
+        "CONFIRM LOGOUT",
+        "Are you sure you want to log out?",
+        {
+          confirm: true,
+          confirmText: "LOGOUT",
+          onConfirm: () => {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('currentUser');
+            appState.currentUser = null;
+            if (elements.userNavItem) elements.userNavItem.style.display = "none";
+            if (elements.loginNavItem) elements.loginNavItem.style.display = "block";
+            [elements.courseNavItem, elements.quizNavItem, elements.resourcesNavItem].forEach(el => { if (el) el.classList.add('locked'); });
+            window.location.href = '../index.html';
+          },
+          cancel: true
+        }
+      );
+    }
+
+    async function loadUsersFromExcel() {
+      try {
+        const response = await fetch('../users.xlsx');
+        if (!response.ok) throw new Error(`Failed to fetch Excel file: HTTP ${response.status}`);
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const excelData = XLSX.utils.sheet_to_json(worksheet);
+        userDatabase = excelData.map(row => ({
+          ID: String(row.ID || '').trim(),
+          Name: String(row.Name || '').trim(),
+          Mobile: String(row.Mobile || '').trim(),
+          Role: String(row.Role || 'student').trim()
+        })).filter(user => user.ID && user.Name && user.Mobile);
+      } catch (error) {
+        console.error('Error loading Excel:', error);
+        userDatabase = [
+          { ID: "STU101", Name: "Test Student", Mobile: "01712345678", Role: "student" },
+          { ID: "TEACH202", Name: "Test Teacher", Mobile: "01876543210", Role: "teacher" }
+        ];
+        const persistedUser = sessionStorage.getItem('currentUser') || localStorage.getItem('loggedInUser');
+        if (!persistedUser) {
+          showAlert("NOTE", "Using test data - Login with ID: STU101, Mobile: 01712345678", { confirm: true });
+        }
+      }
+    }
+
+    function normalizeMobile(mobile) {
+      let digits = mobile.replace(/\D/g, '');
+      if (digits.startsWith('880')) digits = digits.substring(3);
+      else if (digits.startsWith('+880')) digits = digits.substring(4);
+      if (digits.length !== 11) throw new Error('Mobile must be exactly 11 digits');
+      return digits;
+    }
+
+    function validateUser(id, mobile) {
+      try {
+        const normalizedMobile = normalizeMobile(mobile);
+        const user = userDatabase.find(u => u.ID === id.trim() && normalizeMobile(u.Mobile) === normalizedMobile);
+        if (!user) throw new Error('No matching user found');
+        return user;
+      } catch (error) {
+        console.error('Validation error:', error);
+        return null;
+      }
+    }
+
+    function setupLoginEventListeners() {
+      if (elements.loginBtn) elements.loginBtn.addEventListener("click", () => { elements.loginPopup.style.display = "block"; elements.loginId && elements.loginId.focus(); });
+      if (elements.closeBtn) elements.closeBtn.addEventListener("click", () => { elements.loginPopup.style.display = "none"; });
+      if (elements.loginMobile) elements.loginMobile.addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+      if (elements.loginForm) elements.loginForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const id = elements.loginId.value;
+        const mobile = elements.loginMobile.value;
+        if (!id || !mobile) { showAlert("ERROR", "Both ID and Mobile are required", { confirm: true }); return; }
+        const user = validateUser(id, mobile);
+        if (user) { loginUser(user); } else { showAlert("ACCESS DENIED", "Invalid ID or Mobile. Must be exact 11-digit number.", { confirm: true }); }
+      });
+      if (elements.logoutBtn) elements.logoutBtn.addEventListener("click", logoutUser);
+
+      document.querySelectorAll('.nav-item.locked .nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (!appState.currentUser) {
+            e.preventDefault();
+            showAlert(
+              "LOGIN REQUIRED",
+              "Please login to access this section.",
+              { confirm: true, confirmText: "LOGIN", onConfirm: () => { elements.loginPopup.style.display = "block"; } }
+            );
+          }
+        });
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === elements.loginPopup) elements.loginPopup.style.display = "none";
+        if (e.target === elements.alertOverlay) hideAlert();
+      });
+    }
+
+    (async function initializeLogin() {
+      try {
+        await loadUsersFromExcel();
+        setupLoginEventListeners();
+        checkLoggedInUser();
+        window.addEventListener('beforeunload', () => {
+          if (!sessionStorage.getItem('currentUser')) {
+            sessionStorage.removeItem('hasShownWelcome');
+          }
+        });
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showAlert("INIT ERROR", "Failed to initialize login: " + error.message, { confirm: true, confirmText: "RELOAD", onConfirm: () => window.location.reload() });
+      }
+    })();
+  </script>
+</body>
+</html>
