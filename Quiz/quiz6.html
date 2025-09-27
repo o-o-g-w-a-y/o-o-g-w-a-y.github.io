@@ -2130,7 +2130,7 @@ body.modal-open {
       totalQuestions.textContent = quizQuestions.length;
       
       // Check certificate eligibility
-      if (percentageScore >= 60) {
+      if (percentageScore >= 0) {
         try { sessionStorage.setItem('quizCompletedId','5'); localStorage.setItem('quizCompletedId','5'); } catch (e) {}
         certificateEligibility.innerHTML = `
         `;
